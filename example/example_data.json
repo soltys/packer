@@ -1,0 +1,14 @@
+{
+    "files": [
+        {
+            "name": "unique name",
+            "path": "foobar.txt"
+        }
+    ],
+    "kvStore": [
+        {
+            "key": "key1",
+            "value": "value1"
+        }
+    ]
+}
