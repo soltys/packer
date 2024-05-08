@@ -3,46 +3,38 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <schema.sql.hpp>
 #include <packer/private/config.h>
-#include "options/Flags.hpp"
+
 #include "json.hpp"
-#include "Pack.h"
+#include "Packer.h"
+#include "PackerArgument.h"
 #include "Utils.h"
 int main(int argc, char** argv) {
 
-	std::string input_file_name;
-	std::string output_file_name;
-	std::string base_path;
-	bool help;
-	bool version;
-	bool force;
-	Flags flags;
-	flags.Var(input_file_name, 'i', std::string("input"), std::string(""), std::string("input file to be processed"));
-	flags.Var(output_file_name, 'o', std::string("output"), std::string(""), std::string("output pack file"));
-	flags.Var(base_path, 'b', std::string("base-path"), std::string(""), std::string("base path"));
-	flags.Bool(help, 'h', "help", "show this help and exit");
-	flags.Bool(version, 'v', "version", "shows version and exit");
-	flags.Bool(force, 'f', "force", "overwrite output file if already exists");
-	if (!flags.Parse(argc, argv))
+	
+	packer::PackerArgument packer_argument;
+	if(packer_argument.Parse(argc, argv) != 0)
 	{
-		flags.PrintHelp(argv[0]);
-		return 1;
+		packer_argument.PrintHelp();
+		return EXIT_FAILURE;
 	}
-	if (input_file_name.empty())
+
+	if (packer_argument.input_file().empty())
 	{
 		std::cerr << "input file is empty" << std::endl;
 	}
 
-	if (help) {
-		flags.PrintHelp(argv[0]);
+	if (packer_argument.is_help_set()) {
+		packer_argument.PrintHelp();
 		return EXIT_SUCCESS;
 	}
-	if (version)
+	if (packer_argument.is_version_set())
 	{
 		std::cout << "packer version " << PROJECT_VERSION << std::endl;
 		return EXIT_SUCCESS;
 	}
 
-	auto file_content = read_file_into_string(input_file_name);
+
+	auto file_content = read_file_into_string(packer_argument.input_file());
 	auto root = nlohmann::json::parse(file_content);
 	if(!root.contains("files") && !root.contains("store"))
 	{
@@ -57,14 +49,9 @@ int main(int argc, char** argv) {
 	create_schema.exec();
 
 
-	if (root.contains("files"))
-	{
-		packer::packFiles(db, root["files"]);
-	}
-	else if (root.contains("store"))
-	{
-		packer::packStore(db, root["store"]);
-	}
+	packer::Packer packer(db, root);
+	packer.pack();
+
 
 	std::cout << "Hello World!";
 	return 0;

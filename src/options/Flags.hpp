@@ -56,7 +56,7 @@ public:
 	void Bool(bool& var, char shortFlag, std::string longFlag, std::string description, std::string descriptionGroup = "");
 
 	bool Parse(int argc, char** argv);
-	void PrintHelp(char* argv0, std::ostream& to = std::cout);
+	void PrintHelp(const char* argv0, std::ostream& to = std::cout);
 
 private:
 	int autoId;
@@ -192,7 +192,7 @@ inline bool Flags::Parse(int argc, char** argv) {
 	return true;
 }
 
-inline void Flags::PrintHelp(char* argv0, std::ostream& to) {
+inline void Flags::PrintHelp(const char* argv0, std::ostream& to) {
 	to << "Usage: " << argv0 << " [options]" << std::endl << std::endl;
 	for (auto& it : this->help) {
 		if (it.first.size()) {

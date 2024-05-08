@@ -1,6 +1,21 @@
-#include "Pack.h"
+#include "Packer.h"
 #include <iostream>
-void packer::packFiles(const SQLite::Database& db, const nlohmann::json& files_json)
+using namespace  packer;
+
+void Packer::pack()
+{
+
+	if (this->root.contains("files"))
+	{
+		this->packFiles(this->root["files"]);
+	}
+
+	if (this->root.contains("store"))
+	{
+		this->packStore( this->root["store"]);
+	}
+}
+void Packer::packFiles(const nlohmann::json& files_json)
 {
 	for (auto& array_item : files_json.items()) {
 		std::cout << array_item.key() << " : " << array_item.value() << "\n";
@@ -13,7 +28,7 @@ void packer::packFiles(const SQLite::Database& db, const nlohmann::json& files_j
 	}
 }
 
-void packer::packStore(const SQLite::Database& db, const nlohmann::json& store_json)
+void Packer::packStore(const nlohmann::json& store_json)
 {
 	for (auto& store_item : store_json.items()) {
 		std::cout << store_item.key() << " : " << store_item.value() << "\n";	

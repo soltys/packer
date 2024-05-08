@@ -8,13 +8,13 @@ main.cpp
  json.hpp 
  Utils.cpp
  Utils.h
- Pack.cpp
- Pack.h
+ Packer.cpp
+ Packer.h
  options/Flags.hpp 
  options/getopt.cpp 
  options/getopt.h 
  
- ${LIBRARY_RESOURCES_HPP})
+ ${LIBRARY_RESOURCES_HPP} "PackerArgument.h" "PackerArgument.cpp")
 target_link_libraries(packer SQLiteCpp sqlite3)
 target_include_directories(packer PRIVATE ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)
 set_target_properties(packer PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS "-i ${CMAKE_SOURCE_DIR}/example/example_data.json")
