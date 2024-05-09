@@ -1,18 +1,30 @@
-#include <fstream>
 #include <iostream>
-#include <SQLiteCpp/SQLiteCpp.h>
-#include <schema.sql.hpp>
 #include <packer/private/config.h>
 
-#include "json.hpp"
 #include "Packer.h"
 #include "PackerArgument.h"
-#include "Utils.h"
+#include "JsonPackSource.h"
+#include "SqlitePackSink.h"
+
+packer::SourceCollection get_sources()
+{
+	packer::SourceCollection sources;
+	sources.push_back(std::make_unique<packer::JsonPackSource>());
+	return sources;
+}
+
+packer::SinkCollection get_sinks()
+{
+	packer::SinkCollection sinks;
+	sinks.push_back(std::make_unique<packer::SqlitePackSink>());
+	return sinks;
+}
+
 int main(int argc, char** argv) {
 
-	
+
 	packer::PackerArgument packer_argument;
-	if(packer_argument.Parse(argc, argv) != 0)
+	if (packer_argument.Parse(argc, argv) != 0)
 	{
 		packer_argument.PrintHelp();
 		return EXIT_FAILURE;
@@ -33,24 +45,26 @@ int main(int argc, char** argv) {
 		return EXIT_SUCCESS;
 	}
 
-
-	auto file_content = read_file_into_string(packer_argument.input_file());
-	auto root = nlohmann::json::parse(file_content);
-	if(!root.contains("files") && !root.contains("store"))
+	const auto sources = get_sources();
+	for (const auto& source : sources)
 	{
-		std::cerr << "Nothing to pack!" << std::endl;
-		return EXIT_FAILURE;
+		source->Initialize(packer_argument);
+		if(!source->Validate())
+		{
+			std::cout << source->name() << " is not valid";
+			return EXIT_FAILURE;
+		}
 	}
 
-	const auto db = SQLite::Database(":memory:", SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+	const auto sinks = get_sinks();
+	for(const auto& sink: sinks)
+	{
+		sink->Initialize(packer_argument);
+	}
 
-	const auto schema_resource = LOAD_RESOURCE(schema_sql);
-	SQLite::Statement create_schema(db, schema_resource.data());
-	create_schema.exec();
 
-
-	packer::Packer packer(db, root);
-	packer.pack();
+	packer::Packer packer(sources, sinks);
+	packer.Pack();
 
 
 	std::cout << "Hello World!";

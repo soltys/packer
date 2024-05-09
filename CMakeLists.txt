@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28...3.29)
 
 set(PROJECT_VERSION 0.0.1)
 project(packer
+    DESCRIPTION "application which puts stuff into things"
+    HOMEPAGE_URL "https://github.com/soltys/packer"
     VERSION ${PROJECT_VERSION}
     LANGUAGES CXX)
 

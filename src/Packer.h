@@ -1,23 +1,20 @@
 #pragma once
-#include "json.hpp"
-#include "SQLiteCpp/Database.h"
+#include "PackSink.h"
+#include "PackSource.h"
 
 namespace packer
 {
 	class Packer
 	{
 	private:
-		const SQLite::Database& db;
-		const nlohmann::json& root;
-		
-
-		void packFiles(const nlohmann::json& files_json);
-		void packStore(const nlohmann::json& store_json);
+		const SourceCollection& pack_sources;
+		const SinkCollection& pack_sinks;
 
 	public:
-		Packer(const SQLite::Database& db, const nlohmann::json& root) : db(db), root(root) {  }
-		void pack();	
+		Packer(const SourceCollection& pack_sources, const SinkCollection& pack_sinks) :
+			pack_sources(pack_sources), pack_sinks(pack_sinks) {  }
+		void Pack();
 
 	};
-	
+
 }

@@ -160,7 +160,7 @@ inline void Flags::Var(T& var, char shortFlag, std::string longFlag, T defaultVa
 
 inline void Flags::Bool(bool& var, char shortFlag, std::string longFlag, std::string description, std::string descriptionGroup) {
 	struct option op;
-	this->entry(op, shortFlag, longFlag, "(unset)", description, descriptionGroup);
+	this->entry(op, shortFlag, longFlag, "(false)", description, descriptionGroup);
 
 	op.has_arg = no_argument;
 	var = false;
