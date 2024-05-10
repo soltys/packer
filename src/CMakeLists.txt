@@ -18,6 +18,8 @@ add_executable(packer
     SqlitePackSink.cpp
     PackSource.h
     PackSink.h
+    KeyValuePackType.hpp
+    FilePackType.hpp
     options/Flags.hpp 
     options/getopt.cpp 
     options/getopt.h 

@@ -35,13 +35,12 @@ void packer::SqlitePackSink::Insert(KeyValueCollection key_value_collection)
 	const auto insert_stmt_text = LOAD_RESOURCE(insert_key_value_sql);
 	try
 	{
-		SQLite::Transaction transaction(*this->db_);
-
-		for (const auto &key_value : key_value_collection)
-		{
+		SQLite::Transaction transaction(*this->db_);		
+		for (const auto& key_value : key_value_collection)
+		{			
 			SQLite::Statement insert_stmt(*this->db_, insert_stmt_text.data());
-			insert_stmt.bind("$Key", std::get<0>(key_value));
-			insert_stmt.bind("$Value", std::get<1>(key_value));
+			insert_stmt.bind("$Key", key_value.key().c_str());
+			insert_stmt.bind("$Value", key_value.value().c_str());
 			insert_stmt.exec();
 		}
 

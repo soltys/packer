@@ -1,10 +1,10 @@
 #pragma once
+#include "KeyValuePackType.hpp"
 #include "PackerArgument.h"
 
 namespace packer
 {
-	typedef std::tuple<std::string, std::string> KeyValue;
-	typedef std::vector<KeyValue> KeyValueCollection;
+
 
 	class PackSource
 	{
