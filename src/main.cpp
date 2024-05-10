@@ -20,7 +20,8 @@ packer::SinkCollection get_sinks()
 	return sinks;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 	packer::PackerArgument packer_argument;
 	if (packer_argument.Parse(argc, argv) != 0)
 	{
@@ -34,13 +35,14 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 
-	if(packer_argument.output_file().empty())
+	if (packer_argument.output_file().empty())
 	{
 		std::cerr << "output file name is empty" << std::endl;
 		return EXIT_FAILURE;
 	}
 
-	if (packer_argument.help()) {
+	if (packer_argument.help())
+	{
 		packer_argument.PrintHelp();
 		return EXIT_SUCCESS;
 	}
@@ -51,10 +53,10 @@ int main(int argc, char** argv) {
 	}
 
 	const auto sources = get_sources();
-	for (const auto& source : sources)
+	for (const auto &source : sources)
 	{
 		source->Initialize(packer_argument);
-		if(!source->Validate())
+		if (!source->Validate())
 		{
 			std::cout << source->name() << " is not valid";
 			return EXIT_FAILURE;
@@ -62,7 +64,7 @@ int main(int argc, char** argv) {
 	}
 
 	const auto sinks = get_sinks();
-	for(const auto& sink: sinks)
+	for (const auto &sink : sinks)
 	{
 		sink->Initialize(packer_argument);
 	}

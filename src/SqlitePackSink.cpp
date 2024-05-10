@@ -21,8 +21,6 @@ void packer::SqlitePackSink::Initialize(packer::PackerArgument packer_argument)
 		}
 	}
 
-	this->base_path_ = packer_argument.base_path();
-
 	this->db_ = std::make_unique<SQLite::Database>(output_file, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
 	const auto create_file_table_text = LOAD_RESOURCE(create_file_table_sql);
@@ -65,9 +63,7 @@ void packer::SqlitePackSink::Insert(FileCollection file_collection)
 		SQLite::Transaction transaction(*this->db_);
 		for (const auto& file : file_collection)
 		{
-			std::filesystem::path full_file_path(this->base_path_);
-			full_file_path /= file.file_path();
-			auto file_content = read_file_into_string(full_file_path.string());
+			auto file_content = read_file_into_string(file.file_path());
 
 			SQLite::Statement insert_stmt(*this->db_, insert_file_stmt_text.data());
 			insert_stmt.bind("$Name", file.name());
