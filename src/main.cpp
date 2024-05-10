@@ -40,11 +40,11 @@ int main(int argc, char** argv) {
 		return EXIT_FAILURE;
 	}
 
-	if (packer_argument.is_help_set()) {
+	if (packer_argument.help()) {
 		packer_argument.PrintHelp();
 		return EXIT_SUCCESS;
 	}
-	if (packer_argument.is_version_set())
+	if (packer_argument.version())
 	{
 		std::cout << "packer version " << PROJECT_VERSION << std::endl;
 		return EXIT_SUCCESS;
@@ -67,11 +67,8 @@ int main(int argc, char** argv) {
 		sink->Initialize(packer_argument);
 	}
 
-
 	packer::Packer packer(sources, sinks);
 	packer.Pack();
 
-
-	std::cout << "Hello World!";
 	return 0;
 }

@@ -13,5 +13,6 @@ namespace packer
 		bool Validate() override;
 		const std::string name() override { return std::string("Json Pack Source"); }
 		const KeyValueCollection key_value_collection() override;
+		const FileCollection file_collection() override;
 	};
 }

@@ -1,0 +1,1 @@
+INSERT INTO File VALUES ($Name, $Content, $Size);

@@ -1,14 +1,12 @@
 #pragma once
+#include "FilePackType.hpp"
 #include "KeyValuePackType.hpp"
 #include "PackerArgument.h"
 
 namespace packer
 {
-
-
 	class PackSource
 	{
-
 	public:
 		PackSource() = default;
 		PackSource(const PackSource&) = default;
@@ -20,6 +18,7 @@ namespace packer
 		virtual bool Validate() = 0;
 
 		virtual const std::string name() = 0;
+		virtual const FileCollection file_collection() = 0;
 		virtual const KeyValueCollection key_value_collection() = 0;
 	};
 

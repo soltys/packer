@@ -37,11 +37,36 @@ const packer::KeyValueCollection packer::JsonPackSource::key_value_collection()
 	for (const auto& array_item : store_array.items())
 	{
 		auto& kv_object = array_item.value();
-
-		std::cout << to_string(array_item.value()) << std::endl;
 		if (kv_object.contains("key") && kv_object.contains("value"))
 		{
 			collection.emplace_back(kv_object["key"], kv_object["value"]);
+		}
+	}
+
+	return collection;
+}
+
+const packer::FileCollection packer::JsonPackSource::file_collection()
+{
+	packer::FileCollection collection;
+
+	if (!root.contains("files"))
+	{
+		return collection;
+	}
+
+	const auto& files_array = root["files"];
+	if (!files_array.is_array())
+	{
+		return collection;
+	}
+
+	for(const auto& item: files_array.items())
+	{
+		auto& file_object = item.value();
+		if(file_object.contains("name") && file_object.contains("path"))
+		{
+			collection.emplace_back(file_object["name"], file_object["path"]);
 		}
 	}
 

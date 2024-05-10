@@ -10,22 +10,23 @@ namespace packer
 		std::string program_name;
 
 		Flags flags;
-		std::string input_file_name;
-		std::string output_file_name;
-		std::string base_path;
-		bool help;
-		bool version;
-		bool force;
+		std::string input_file_;
+		std::string output_file_;
+		std::string base_path_;
+		bool help_;
+		bool version_;
+		bool force_;
 
 	public:
 		PackerArgument();
 		int Parse(int argc, char** argv);
 		void PrintHelp();
 
-		const std::string& output_file() const { return this->output_file_name; }
-		const std::string& input_file() const { return this->input_file_name; }
-		const bool& is_help_set() const { return this->help; }
-		const bool& is_version_set() const { return this->version; }
-		const bool& is_force_set() const { return this->force; }
+		const std::string& output_file() const { return this->output_file_; }
+		const std::string& input_file() const { return this->input_file_; }
+		const std::string& base_path() const { return this->base_path_; }
+		const bool& help() const { return this->help_; }
+		const bool& version() const { return this->version_; }
+		const bool& force() const { return this->force_; }
 	};
 }
