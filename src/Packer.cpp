@@ -2,27 +2,18 @@
 #include <iostream>
 using namespace  packer;
 
-void Packer::Pack()
+void Packer::Pack() const
 {
+	KeyValueCollection kvCollection;
+	for (const auto& source: this->sources )
+	{
+		const auto& kvSourceCollection = source->key_value_collection();
+		std::copy(kvSourceCollection.begin(), kvSourceCollection.end(), std::back_inserter(kvCollection));
+	}
 
+	for (const auto& sink: this->sinks)
+	{
+		sink->Insert(kvCollection);
+	}
 	
 }
-//void Packer::packFiles(const nlohmann::json& files_json)
-//{
-//	for (auto& array_item : files_json.items()) {
-//		std::cout << array_item.key() << " : " << array_item.value() << "\n";
-//		for (auto& kv: array_item.value().items())
-//		{
-//			std::string v;
-//			std::cout << kv.key() << " : " << kv.value().get_to(v) << "\n";
-//			std::cout << v << "\n";
-//		}
-//	}
-//}
-//
-//void Packer::packStore(const nlohmann::json& store_json)
-//{
-//	for (auto& store_item : store_json.items()) {
-//		std::cout << store_item.key() << " : " << store_item.value() << "\n";	
-//	}
-//}

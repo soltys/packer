@@ -21,8 +21,6 @@ packer::SinkCollection get_sinks()
 }
 
 int main(int argc, char** argv) {
-
-
 	packer::PackerArgument packer_argument;
 	if (packer_argument.Parse(argc, argv) != 0)
 	{
@@ -33,6 +31,13 @@ int main(int argc, char** argv) {
 	if (packer_argument.input_file().empty())
 	{
 		std::cerr << "input file is empty" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	if(packer_argument.output_file().empty())
+	{
+		std::cerr << "output file name is empty" << std::endl;
+		return EXIT_FAILURE;
 	}
 
 	if (packer_argument.is_help_set()) {

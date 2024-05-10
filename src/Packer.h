@@ -7,14 +7,13 @@ namespace packer
 	class Packer
 	{
 	private:
-		const SourceCollection& pack_sources;
-		const SinkCollection& pack_sinks;
+		const SourceCollection& sources;
+		const SinkCollection& sinks;
 
 	public:
 		Packer(const SourceCollection& pack_sources, const SinkCollection& pack_sinks) :
-			pack_sources(pack_sources), pack_sinks(pack_sinks) {  }
-		void Pack();
-
+			sources(pack_sources), sinks(pack_sinks) {  }
+		void Pack() const;
 	};
 
 }

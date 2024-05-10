@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PackerArgument.h"
+#include "PackSource.h"
 
 namespace packer
 {
@@ -15,6 +16,7 @@ namespace packer
 		virtual ~PackSink() = default;
 
 		virtual void Initialize(PackerArgument packer_argument) = 0;
+		virtual void Insert(KeyValueCollection key_value) = 0;
 	};
 
 	typedef std::vector<std::unique_ptr<PackSink>> SinkCollection;

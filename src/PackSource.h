@@ -3,7 +3,9 @@
 
 namespace packer
 {
-	
+	typedef std::tuple<std::string, std::string> KeyValue;
+	typedef std::vector<KeyValue> KeyValueCollection;
+
 	class PackSource
 	{
 
@@ -18,6 +20,7 @@ namespace packer
 		virtual bool Validate() = 0;
 
 		virtual const std::string name() = 0;
+		virtual const KeyValueCollection key_value_collection() = 0;
 	};
 
 	typedef std::vector<std::unique_ptr<PackSource>> SourceCollection;
