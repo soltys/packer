@@ -12,3 +12,10 @@ target_include_directories(${LIBRARY_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
+
+set_target_properties(${LIBRARY_NAME} PROPERTIES
+                        PROJECT_LABEL "Packer Library" 
+                        CXX_STANDARD 17
+                        CXX_STANDARD_REQUIRED YES
+                        CXX_EXTENSIONS Off
+                        OUTPUT_NAME "packer")

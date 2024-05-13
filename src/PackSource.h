@@ -1,7 +1,9 @@
 #pragma once
 #include "FilePackType.hpp"
 #include "KeyValuePackType.hpp"
+#include "TranslationPackType.hpp"
 #include "PackerArgument.h"
+
 
 namespace packer
 {
@@ -20,6 +22,7 @@ namespace packer
 		virtual const std::string name() = 0;
 		virtual const FileCollection file_collection() = 0;
 		virtual const KeyValueCollection key_value_collection() = 0;
+		virtual const TranslationCollection translation_collection() = 0;
 	};
 
 	typedef std::vector<std::unique_ptr<PackSource>> SourceCollection;

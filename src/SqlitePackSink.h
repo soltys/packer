@@ -1,7 +1,7 @@
 #pragma once
 #include "PackSink.h"
 #include "PackSource.h"
-#include "SQLiteCpp/Backup.h"
+#include "SQLiteCpp/Database.h"
 
 namespace packer
 {
@@ -9,11 +9,10 @@ namespace packer
 	{
 	private:
 		std::unique_ptr<SQLite::Database> db_;
-
-		std::string base_path_;
 	public:
 		void Initialize(packer::PackerArgument packer_argument) override;
 		void Insert(KeyValueCollection key_value) override;
 		void Insert(FileCollection file_collection) override;
+		void Insert(TranslationCollection translation_collection) override;
 	};
 }

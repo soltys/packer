@@ -1,0 +1,1 @@
+INSERT INTO Translation VALUES ($Key, $Value, $Locale);

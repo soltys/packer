@@ -1,8 +1,10 @@
 set(EMBEDED_FILES 
     "create_file_table.sql"
     "create_store_table.sql"
+    "create_translation_table.sql"
     "insert_key_value.sql"
     "insert_file.sql"
+    "insert_translation.sql"
 )
 add_custom_target(packer_resources SOURCES ${EMBEDED_FILES})
 source_group("Embeded Files" REGULAR_EXPRESSION ".*sql.hpp$")
@@ -25,9 +27,11 @@ add_executable(packer
     PackSink.h
     KeyValuePackType.hpp
     FilePackType.hpp
+    TranslationPackType.hpp
     options/Flags.hpp 
     options/getopt.cpp 
-    options/getopt.h 
+    options/getopt.h
+    glob.hpp
     ${LIBRARY_RESOURCES_HPP})
 target_link_libraries(packer SQLiteCpp sqlite3)
 target_include_directories(packer PRIVATE ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)

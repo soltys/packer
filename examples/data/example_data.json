@@ -1,6 +1,10 @@
 {
     "files": [
         {
+            "prefix": "glob_example_",
+            "glob": "g*.txt"
+        },
+        {
             "name": "f1",
             "path": "file1.txt"
         },
@@ -11,7 +15,7 @@
         {
             "name": "f3",
             "path": "file3.txt"
-        }        
+        }
     ],
     "store": [
         {
@@ -26,5 +30,19 @@
             "key": "key3",
             "value": "value3"
         }
-    ]
+    ],
+    "translations": {
+        "en": [
+            {
+                "key": "HELLO_MESSAGE",
+                "value": "Hello, World!"
+            }
+        ],
+        "pl": [
+            {
+                "key": "HELLO_MESSAGE",
+                "value": "Witaj, Świecie!"
+            }
+        ]
+    }
 }
