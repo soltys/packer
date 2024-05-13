@@ -14,7 +14,8 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 configure_file("config.h.in" "${PROJECT_BINARY_DIR}/packer/private/config.h")
 
 include(dependecies)
+add_subdirectory(lib)
 add_subdirectory(src)
 
 include(pack_resources)
-add_subdirectory(example_app)
+add_subdirectory(examples)

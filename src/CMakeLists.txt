@@ -31,5 +31,5 @@ add_executable(packer
     ${LIBRARY_RESOURCES_HPP})
 target_link_libraries(packer SQLiteCpp sqlite3)
 target_include_directories(packer PRIVATE ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)
-set_target_properties(packer PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS "-f -i ${CMAKE_SOURCE_DIR}/example/example_data.json -o ${CMAKE_BINARY_DIR}/res.db"
-VS_DEBUGGER_WORKING_DIRECTORY "C:/git/personal/sqlite_packer/example" )
+set_target_properties(packer PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS "-f -i ${CMAKE_SOURCE_DIR}/examples/data/example_data.json -o ${CMAKE_BINARY_DIR}/res.db"
+VS_DEBUGGER_WORKING_DIRECTORY "C:/git/personal/sqlite_packer/examples/data" )
