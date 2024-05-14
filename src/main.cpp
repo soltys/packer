@@ -3,8 +3,8 @@
 
 #include "Packer.h"
 #include "PackerArgument.h"
-#include "JsonPackSource.h"
-#include "SqlitePackSink.h"
+#include "sources/JsonPackSource.h"
+#include "sinks/SqlitePackSink.h"
 
 packer::SourceCollection get_sources()
 {
@@ -23,6 +23,11 @@ packer::SinkCollection get_sinks()
 int main(int argc, char **argv)
 {
 	packer::PackerArgument packer_argument;
+
+	for (int i=0;i<argc;i++)
+	{
+		std::cout << argv[i] << std::endl;
+	}
 	if (packer_argument.Parse(argc, argv) != 0)
 	{
 		packer_argument.PrintHelp();

@@ -1,8 +1,6 @@
 #pragma once
-#include "FilePackType.hpp"
-#include "KeyValuePackType.hpp"
-#include "TranslationPackType.hpp"
-#include "PackerArgument.h"
+#include "../packTypes/PackTypes.h"
+#include "../PackerArgument.h"
 
 
 namespace packer

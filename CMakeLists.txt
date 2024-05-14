@@ -8,14 +8,27 @@ project(packer
     LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS Off )
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-configure_file("config.h.in" "${PROJECT_BINARY_DIR}/packer/private/config.h")
+configure_file("config.h.in" "${PROJECT_BINARY_DIR}/include/packer/private/config.h")
 
 include(dependecies)
+
 add_subdirectory(lib)
 add_subdirectory(src)
 
 include(pack_resources)
 add_subdirectory(examples)
+
+include(get_all_targets)
+get_all_targets(all_targets)
+
+set_target_properties( ${all_targets}
+    PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/lib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/lib"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/bin"
+)

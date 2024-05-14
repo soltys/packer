@@ -1,8 +1,8 @@
 #include "JsonPackSource.h"
 
-#include "json.hpp"
-#include "Utils.h"
-#include "glob.hpp"
+#include "../utils/json.hpp"
+#include "../utils/Utils.h"
+#include "../utils/glob.hpp"
 
 void packer::JsonPackSource::Initialize(PackerArgument packer_argument)
 {

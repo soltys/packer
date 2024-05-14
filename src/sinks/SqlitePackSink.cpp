@@ -1,14 +1,13 @@
 #include "SqlitePackSink.h"
 
-#include "create_file_table.sql.hpp"
-#include "create_store_table.sql.hpp"
-#include "create_translation_table.sql.hpp"
+#include <sql/create_file_table.sql.hpp>
+#include <sql/create_store_table.sql.hpp>
+#include <sql/create_translation_table.sql.hpp>
+#include <sql/insert_key_value.sql.hpp>
+#include <sql/insert_file.sql.hpp>
+#include <sql/insert_translation.sql.hpp>
 
-#include "insert_key_value.sql.hpp"
-#include "insert_file.sql.hpp"
-#include "insert_translation.sql.hpp"
-
-#include "Utils.h"
+#include "../utils/Utils.h"
 
 #include "SQLiteCpp/Database.h"
 #include "SQLiteCpp/Statement.h"
@@ -28,7 +27,7 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 	this->db_ = std::make_unique<SQLite::Database>(output_file, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 	try
 	{
-		const auto create_file_table_text = LOAD_RESOURCE(create_file_table_sql);
+		const auto create_file_table_text = LOAD_RESOURCE(sql_create_file_table_sql);
 		SQLite::Statement create_file_table_stmt(*this->db_, create_file_table_text.data());
 		create_file_table_stmt.exec();
 	}
@@ -38,7 +37,7 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 	}
 	try
 	{
-		const auto create_store_table_text = LOAD_RESOURCE(create_store_table_sql);
+		const auto create_store_table_text = LOAD_RESOURCE(sql_create_store_table_sql);
 		SQLite::Statement create_store_table_stmt(*this->db_, create_store_table_text.data());
 		create_store_table_stmt.exec();
 	}
@@ -49,7 +48,7 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 
 	try
 	{
-		const auto create_translation_table_text = LOAD_RESOURCE(create_translation_table_sql);
+		const auto create_translation_table_text = LOAD_RESOURCE(sql_create_translation_table_sql);
 		SQLite::Statement create_translation_table_stmt(*this->db_, create_translation_table_text.data());
 		create_translation_table_stmt.exec();
 	}
@@ -61,7 +60,7 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 
 void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collection)
 {
-	const auto insert_stmt_text = LOAD_RESOURCE(insert_key_value_sql);
+	const auto insert_stmt_text = LOAD_RESOURCE(sql_insert_key_value_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
@@ -84,7 +83,7 @@ void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collectio
 
 void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 {
-	const auto insert_file_stmt_text = LOAD_RESOURCE(insert_file_sql);
+	const auto insert_file_stmt_text = LOAD_RESOURCE(sql_insert_file_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
@@ -110,7 +109,7 @@ void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 
 void packer::SqlitePackSink::Insert(TranslationCollection translation_collection)
 {
-	const auto insert_translation_stmt_text = LOAD_RESOURCE(insert_translation_sql);
+	const auto insert_translation_stmt_text = LOAD_RESOURCE(sql_insert_translation_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);

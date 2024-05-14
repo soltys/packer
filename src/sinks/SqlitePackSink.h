@@ -1,6 +1,6 @@
 #pragma once
 #include "PackSink.h"
-#include "PackSource.h"
+#include "../sources/PackSource.h"
 #include "SQLiteCpp/Database.h"
 
 namespace packer

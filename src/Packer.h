@@ -1,6 +1,6 @@
 #pragma once
-#include "PackSink.h"
-#include "PackSource.h"
+#include "sinks/PackSink.h"
+#include "sources/PackSource.h"
 
 namespace packer
 {
