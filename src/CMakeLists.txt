@@ -37,6 +37,8 @@ add_executable(packer
     utils/getopt.cpp 
     utils/getopt.h
     utils/glob.hpp 
+    
+    ${LIBRARY_RESOURCES_HPP}
     )
 target_link_libraries(packer SQLiteCpp sqlite3)
 target_include_directories(packer PRIVATE "${PROJECT_BINARY_DIR}/include" ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)

@@ -24,10 +24,6 @@ int main(int argc, char **argv)
 {
 	packer::PackerArgument packer_argument;
 
-	for (int i=0;i<argc;i++)
-	{
-		std::cout << argv[i] << std::endl;
-	}
 	if (packer_argument.Parse(argc, argv) != 0)
 	{
 		packer_argument.PrintHelp();

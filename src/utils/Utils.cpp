@@ -5,7 +5,14 @@
 std::string read_file_into_string(const std::string& file_name)
 {
 	std::ifstream ifs;
+	
 	ifs.open(file_name, std::ios::in | std::ios::binary);
+	if (!ifs.is_open())
+	{
+		std::cerr << "Failed to open a file";
+		throw std::invalid_argument("could not open the file: " + file_name);
+
+	}
 	ifs.unsetf(std::ios::skipws);
 
 	// get its size:
