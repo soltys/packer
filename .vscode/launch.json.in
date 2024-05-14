@@ -8,16 +8,16 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/bin/packer.exe",
+            "program": "@CMAKE_BINARY_DIR@/Debug/bin/packer.exe",
             "args": [
                 "-f",
                 "-i",
-                "${workspaceFolder}/examples/data/example_data.json",
+                "@PROJECT_SOURCE_DIR@/examples/data/example_data.json",
                 "-o",
-                "${workspaceFolder}/build/res.db"
+                "@CMAKE_BINARY_DIR@/res.db"
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/examples/data",
+            "cwd": "@PROJECT_SOURCE_DIR@/examples/data",
             "environment": [],
             "console": "externalTerminal"
         }
