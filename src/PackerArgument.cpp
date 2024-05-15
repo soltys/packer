@@ -1,28 +1,61 @@
 #include "PackerArgument.h"
-
+#include <packer/private/config.h>
 using namespace packer;
 
-PackerArgument::PackerArgument()
-{	
-	flags.Var(input_file_, 'i', std::string("input"), std::string(""), std::string("input file to be processed"));
-	flags.Var(output_file_, 'o', std::string("output"), std::string(""), std::string("output pack file"));
-	flags.Bool(help_, 'h', "help", "show this help and exit");
-	flags.Bool(version_, 'v', "version", "shows version and exit");
-	flags.Bool(force_, 'f', "force", "overwrite output file if already exists");
-}
-int PackerArgument::Parse(int argc, char** argv)
+ParseResult PackerArgument::Parse(int argc, char** argv)
 {
-	this->program_name = argv[0];
-	if (!flags.Parse(argc, argv))
+	args::ArgumentParser parser(PROJECT_DESCRIPTION);
+	args::HelpFlag help_flag(parser, "help", "Display this help menu", { 'h', "help" });
+	args::Flag version_flag(parser, "version", "shows version and exit", { 'v', "version" });
+	args::ValueFlag<std::string> input_file_flag(parser, "input", "input file to be processed", { 'i',"input" });
+	args::ValueFlag<std::string> output_file_flag(parser, "output", "output file to be processed", { 'o',"output" });
+	args::Flag forceFlag(parser, "force", "overwrite output file if already exists", { 'f',"force" });
+
+	try
 	{
-		flags.PrintHelp(this->program_name.c_str());
-		return 1;
+		parser.ParseCLI(argc, argv);
+	}
+	catch (args::Help)
+	{
+		std::cout << parser;
+		return ExitWithSuccess;
+	}
+	catch (args::ParseError e)
+	{
+		std::cerr << e.what() << std::endl;
+		std::cerr << parser;
+		return ExitWithFailure;
+	}
+	catch (args::ValidationError e)
+	{
+		std::cerr << e.what() << std::endl;
+		std::cerr << parser;
+		return ExitWithFailure;
 	}
 
-	return 0;
-}
+	if (version_flag)
+	{
+		std::cout << "packer version " << PROJECT_VERSION << " " << PROJECT_VERSION_SHA1 << std::endl;
+		return ExitWithSuccess;
+	}
 
-void PackerArgument::PrintHelp()
-{
-	flags.PrintHelp(this->program_name.c_str());
+	if (!input_file_flag)
+	{
+		std::cerr << "input file is empty" << std::endl;
+		std::cerr << parser;
+		return ExitWithFailure;
+	}
+	input_file_ = args::get(input_file_flag);
+
+	if (!output_file_flag)
+	{
+		std::cerr << "output file name is empty" << std::endl;
+		std::cerr << parser;
+		return ExitWithFailure;
+	}
+	output_file_ = args::get(output_file_flag);
+
+	force_ = args::get(forceFlag);
+
+	return Continue;
 }

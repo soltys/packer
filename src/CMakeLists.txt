@@ -32,11 +32,9 @@ add_executable(packer
 
     utils/json.hpp 
     utils/Utils.cpp
-    utils/Utils.h
-    utils/Flags.hpp 
-    utils/getopt.cpp 
-    utils/getopt.h
+    utils/Utils.h    
     utils/glob.hpp 
+    utils/args.hxx
     
     ${LIBRARY_RESOURCES_HPP}
     )

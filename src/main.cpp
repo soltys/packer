@@ -20,41 +20,22 @@ packer::SinkCollection get_sinks()
 	return sinks;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	packer::PackerArgument packer_argument;
 
-	if (packer_argument.Parse(argc, argv) != 0)
+	switch (packer_argument.Parse(argc, argv))
 	{
-		packer_argument.PrintHelp();
+	case packer::ParseResult::ExitWithFailure:
 		return EXIT_FAILURE;
-	}
-
-	if (packer_argument.help())
-	{
-		packer_argument.PrintHelp();
+	case packer::ParseResult::ExitWithSuccess:
 		return EXIT_SUCCESS;
-	}
-	if (packer_argument.version())
-	{
-		std::cout << "packer version " << PROJECT_VERSION << " " << PROJECT_VERSION_SHA1 << std::endl;
-		return EXIT_SUCCESS;
+	case packer::ParseResult::Continue:	
+		break;
 	}
 
-	if (packer_argument.input_file().empty())
-	{
-		std::cerr << "input file is empty" << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	if (packer_argument.output_file().empty())
-	{
-		std::cerr << "output file name is empty" << std::endl;
-		return EXIT_FAILURE;
-	}
-	
 	const auto sources = get_sources();
-	for (const auto &source : sources)
+	for (const auto& source : sources)
 	{
 		source->Initialize(packer_argument);
 		if (!source->Validate())
@@ -65,7 +46,7 @@ int main(int argc, char **argv)
 	}
 
 	const auto sinks = get_sinks();
-	for (const auto &sink : sinks)
+	for (const auto& sink : sinks)
 	{
 		sink->Initialize(packer_argument);
 	}
