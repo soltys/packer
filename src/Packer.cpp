@@ -3,7 +3,7 @@
 using namespace  packer;
 
 void Packer::Pack() const
-{
+{	
 	KeyValueCollection key_value_collection;
 	FileCollection file_collection;
 	TranslationCollection translation_collection;

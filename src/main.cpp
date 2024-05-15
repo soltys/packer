@@ -1,5 +1,4 @@
 #include <iostream>
-#include <packer/private/config.h>
 
 #include "Packer.h"
 #include "PackerArgument.h"

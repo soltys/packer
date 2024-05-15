@@ -21,10 +21,8 @@ namespace packer
 		PackerArgument() = default;
 		ParseResult Parse(int argc, char** argv);
 
-		const std::string& output_file() const { return this->output_file_; }
-		const std::string& input_file() const { return this->input_file_; }
-		const bool& force() const { return this->force_; }
+		[[nodiscard]] const std::string& output_file() const { return this->output_file_; }
+		[[nodiscard]] const std::string& input_file() const { return this->input_file_; }
+		[[nodiscard]] const bool& force() const { return this->force_; }
 	};
-
-	
 }

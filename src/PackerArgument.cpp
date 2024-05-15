@@ -54,7 +54,7 @@ ParseResult PackerArgument::Parse(int argc, char** argv)
 		return ExitWithFailure;
 	}
 	output_file_ = args::get(output_file_flag);
-
+	
 	force_ = args::get(forceFlag);
 
 	return Continue;
