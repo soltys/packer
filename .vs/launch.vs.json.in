@@ -1,0 +1,21 @@
+{
+    "version": "0.2.1",
+    "defaults": {},
+    "configurations": [
+      {
+        "type": "default",
+        "project": "CMakeLists.txt",
+        "projectTarget": "packer.exe (Debug\\bin\\packer.exe)",
+        "name": "packer.exe (Debug\\bin\\packer.exe)",
+        "cwd": "@PROJECT_SOURCE_DIR@/examples/data",
+        "currentDir": "@PROJECT_SOURCE_DIR@/examples/data",
+        "args": [
+          "-f",
+          "-i",
+          "@PROJECT_SOURCE_DIR@/examples/data/example_data.json",
+          "-o",
+          "@CMAKE_BINARY_DIR@/res.db"
+        ]        
+      }
+    ]
+  }

@@ -25,5 +25,4 @@ void Packer::Pack() const
 		sink->Insert(file_collection);
 		sink->Insert(translation_collection);
 	}
-
 }

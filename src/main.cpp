@@ -30,6 +30,17 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 
+	if (packer_argument.help())
+	{
+		packer_argument.PrintHelp();
+		return EXIT_SUCCESS;
+	}
+	if (packer_argument.version())
+	{
+		std::cout << "packer version " << PROJECT_VERSION << " " << PROJECT_VERSION_SHA1 << std::endl;
+		return EXIT_SUCCESS;
+	}
+
 	if (packer_argument.input_file().empty())
 	{
 		std::cerr << "input file is empty" << std::endl;
@@ -41,18 +52,7 @@ int main(int argc, char **argv)
 		std::cerr << "output file name is empty" << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	if (packer_argument.help())
-	{
-		packer_argument.PrintHelp();
-		return EXIT_SUCCESS;
-	}
-	if (packer_argument.version())
-	{
-		std::cout << "packer version " << PROJECT_VERSION << std::endl;
-		return EXIT_SUCCESS;
-	}
-
+	
 	const auto sources = get_sources();
 	for (const auto &source : sources)
 	{
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 		sink->Initialize(packer_argument);
 	}
 
-	packer::Packer packer(sources, sinks);
+	const packer::Packer packer(sources, sinks);
 	packer.Pack();
 
 	return 0;
