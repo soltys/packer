@@ -2,7 +2,7 @@
 #include "EmbedResource.hpp"
 #include "PackSink.h"
 #include "../sources/PackSource.h"
-#include "SQLiteCpp/Database.h"
+#include <SQLiteCpp/Database.h>
 
 namespace packer
 {

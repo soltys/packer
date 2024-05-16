@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "SQLiteCpp/Database.h"
+#include <SQLiteCpp/Database.h>
 
 namespace packer
 {
