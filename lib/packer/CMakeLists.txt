@@ -5,6 +5,9 @@ set(LIBRARY_NAME
 
 set(EMBEDED_FILES 
     "sql/get_key.sql"
+    "sql/get_file.sql"
+    "sql/get_toggle.sql"
+    "sql/get_translation.sql"
 )
 add_custom_target(packer_library_resources SOURCES ${EMBEDED_FILES})
 embed_resources(PACKER_LIBRARY_RESOURCES_HPP CONTENT_AS_COMMENT FILES ${EMBEDED_FILES} )

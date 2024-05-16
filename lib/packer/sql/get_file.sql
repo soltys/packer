@@ -1,0 +1,1 @@
+SELECT Content, Size FROM File WHERE Name = $Name;

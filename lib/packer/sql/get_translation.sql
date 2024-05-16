@@ -1,0 +1,1 @@
+SELECT Value FROM translation WHERE Key=$Key AND Locale=$Locale;

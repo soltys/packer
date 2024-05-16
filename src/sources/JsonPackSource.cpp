@@ -28,19 +28,18 @@ const packer::KeyValueCollection packer::JsonPackSource::key_value_collection()
 		return collection;
 	}
 
-	const auto &store_array = root["store"];
-	if (!store_array.is_array())
+	const auto &store = root["store"];
+	if (!store.is_object())
 	{
 		return collection;
 	}
 
-	for (const auto &array_item : store_array.items())
+	for (const auto &el : store.items())
 	{
-		auto &kv_object = array_item.value();
-		if (kv_object.contains("key") && kv_object.contains("value"))
-		{
-			collection.emplace_back(kv_object["key"], kv_object["value"]);
-		}
+		auto key = el.key();
+		auto value = el.value().get<std::string>();
+
+		collection.emplace_back(key, value);
 	}
 
 	return collection;
@@ -106,15 +105,13 @@ const packer::TranslationCollection packer::JsonPackSource::translation_collecti
 
 	for (const auto &group : translations_object.items())
 	{
-		std::string locale = group.key();
+		std::string key = group.key();
 
 		for (const auto &el : group.value().items())
 		{
-			const auto &translation = el.value();
-			if (translation.contains("key") && translation.contains("value"))
-			{
-				collection.emplace_back(translation["key"], translation["value"], locale);
-			}
+			const auto locale = el.key();
+			const auto value = el.value().get<std::string>();
+			collection.emplace_back(key, value, locale);
 		}
 	}
 
