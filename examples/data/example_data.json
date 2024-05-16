@@ -44,5 +44,10 @@
                 "value": "Witaj, Świecie!"
             }
         ]
+    },
+    "toggles":{
+        "feature1": true,
+        "feature2": false,
+        "feature3": true
     }
 }

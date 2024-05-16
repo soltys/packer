@@ -2,9 +2,11 @@ set(EMBEDED_FILES
     "sql/create_file_table.sql"
     "sql/create_store_table.sql"
     "sql/create_translation_table.sql"
+    "sql/create_toggle_table.sql"
     "sql/insert_key_value.sql"
     "sql/insert_file.sql"
     "sql/insert_translation.sql"
+    "sql/insert_toggle.sql"
 )
 add_custom_target(packer_resources SOURCES ${EMBEDED_FILES})
 source_group("Embeded Files" REGULAR_EXPRESSION ".*sql.hpp$")

@@ -12,8 +12,8 @@ embed_resources(PACKER_LIBRARY_RESOURCES_HPP CONTENT_AS_COMMENT FILES ${EMBEDED_
 
 add_library(${LIBRARY_NAME} 
 
-    src/unpacker.cpp    
-    include/packer/unpacker.h
+    src/Reader.cpp    
+    include/packer/Reader.h
     ${PACKER_LIBRARY_RESOURCES_HPP}
 )
 

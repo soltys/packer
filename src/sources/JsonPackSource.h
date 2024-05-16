@@ -15,5 +15,6 @@ namespace packer
 		const KeyValueCollection key_value_collection() override;
 		const FileCollection file_collection() override;
 		const TranslationCollection translation_collection() override;
+		const ToggleCollection toggle_collection() override;
 	};
 }

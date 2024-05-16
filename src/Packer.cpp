@@ -7,6 +7,7 @@ void Packer::Pack() const
 	KeyValueCollection key_value_collection;
 	FileCollection file_collection;
 	TranslationCollection translation_collection;
+	ToggleCollection toggle_collection;
 	for (const auto& source : this->sources)
 	{
 		const auto& source_kv_collection = source->key_value_collection();
@@ -17,6 +18,9 @@ void Packer::Pack() const
 
 		const auto& source_translation_collection = source->translation_collection();
 		std::copy(source_translation_collection.begin(), source_translation_collection.end(), std::back_inserter(translation_collection));
+
+		const auto& source_toggle_collection = source->toggle_collection();
+		std::copy(source_toggle_collection.begin(), source_toggle_collection.end(), std::back_inserter(toggle_collection));
 	}
 
 	for (const auto& sink : this->sinks)
@@ -24,5 +28,6 @@ void Packer::Pack() const
 		sink->Insert(key_value_collection);
 		sink->Insert(file_collection);
 		sink->Insert(translation_collection);
+		sink->Insert(toggle_collection);
 	}
 }

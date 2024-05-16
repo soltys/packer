@@ -3,9 +3,12 @@
 #include <sql/create_file_table.sql.hpp>
 #include <sql/create_store_table.sql.hpp>
 #include <sql/create_translation_table.sql.hpp>
+#include <sql/create_toggle_table.sql.hpp>
+
 #include <sql/insert_key_value.sql.hpp>
 #include <sql/insert_file.sql.hpp>
 #include <sql/insert_translation.sql.hpp>
+#include <sql/insert_toggle.sql.hpp>
 
 #include "../utils/Utils.h"
 
@@ -25,34 +28,21 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 	}
 
 	this->db_ = std::make_unique<SQLite::Database>(output_file, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-	try
-	{
-		const auto create_file_table_text = LOAD_RESOURCE(sql_create_file_table_sql);
-		SQLite::Statement create_file_table_stmt(*this->db_, create_file_table_text.data());
-		create_file_table_stmt.exec();
-	}
-	catch (SQLite::Exception& e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-	}
-	try
-	{
-		const auto create_store_table_text = LOAD_RESOURCE(sql_create_store_table_sql);
-		SQLite::Statement create_store_table_stmt(*this->db_, create_store_table_text.data());
-		create_store_table_stmt.exec();
-	}
-	catch (SQLite::Exception& e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-	}
 
+	ExecuteStatement(LOAD_RESOURCE(sql_create_file_table_sql));
+	ExecuteStatement(LOAD_RESOURCE(sql_create_store_table_sql));
+	ExecuteStatement(LOAD_RESOURCE(sql_create_translation_table_sql));
+	ExecuteStatement(LOAD_RESOURCE(sql_create_toggle_table_sql));
+}
+
+void packer::SqlitePackSink::ExecuteStatement(const EmbedResource &stmt_text_resource) const
+{
 	try
 	{
-		const auto create_translation_table_text = LOAD_RESOURCE(sql_create_translation_table_sql);
-		SQLite::Statement create_translation_table_stmt(*this->db_, create_translation_table_text.data());
-		create_translation_table_stmt.exec();
+		SQLite::Statement statement(*this->db_, stmt_text_resource.data());
+		statement.exec();
 	}
-	catch (SQLite::Exception& e)
+	catch (SQLite::Exception &e)
 	{
 		std::cerr << "exception: " << e.what() << std::endl;
 	}
@@ -64,7 +54,7 @@ void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collectio
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
-		for (const auto& key_value : key_value_collection)
+		for (const auto &key_value : key_value_collection)
 		{
 			SQLite::Statement insert_stmt(*this->db_, insert_stmt_text.data());
 			insert_stmt.bind("$Key", key_value.key());
@@ -74,7 +64,7 @@ void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collectio
 
 		transaction.commit();
 	}
-	catch (SQLite::Exception& e)
+	catch (SQLite::Exception &e)
 	{
 		std::cerr << "exception: " << e.what() << std::endl;
 		return;
@@ -87,7 +77,7 @@ void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
-		for (const auto& file : file_collection)
+		for (const auto &file : file_collection)
 		{
 			auto file_content = read_file_into_string(file.file_path());
 
@@ -100,7 +90,7 @@ void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 
 		transaction.commit();
 	}
-	catch (SQLite::Exception& e)
+	catch (SQLite::Exception &e)
 	{
 		std::cout << "exception: " << e.what() << std::endl;
 		return;
@@ -113,7 +103,7 @@ void packer::SqlitePackSink::Insert(TranslationCollection translation_collection
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
-		for (const auto& translation : translation_collection)
+		for (const auto &translation : translation_collection)
 		{
 			SQLite::Statement insert_stmt(*this->db_, insert_translation_stmt_text.data());
 			insert_stmt.bind("$Key", translation.key());
@@ -124,11 +114,32 @@ void packer::SqlitePackSink::Insert(TranslationCollection translation_collection
 
 		transaction.commit();
 	}
-	catch (SQLite::Exception& e)
+	catch (SQLite::Exception &e)
 	{
 		std::cout << "exception: " << e.what() << std::endl;
 		return;
 	}
-
 }
 
+void packer::SqlitePackSink::Insert(ToggleCollection toggle_collection)
+{
+	const auto insert_toggle_stmt_text = LOAD_RESOURCE(sql_insert_toggle_sql);
+	try
+	{
+		SQLite::Transaction transaction(*this->db_);
+		for (const auto &translation : toggle_collection)
+		{
+			SQLite::Statement insert_stmt(*this->db_, insert_toggle_stmt_text.data());
+			insert_stmt.bind("$Name", translation.name());
+			insert_stmt.bind("$IsOn", translation.isOn());
+			insert_stmt.exec();
+		}
+
+		transaction.commit();
+	}
+	catch (SQLite::Exception &e)
+	{
+		std::cout << "exception: " << e.what() << std::endl;
+		return;
+	}
+}

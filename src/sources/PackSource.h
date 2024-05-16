@@ -21,6 +21,7 @@ namespace packer
 		virtual const FileCollection file_collection() = 0;
 		virtual const KeyValueCollection key_value_collection() = 0;
 		virtual const TranslationCollection translation_collection() = 0;
+		virtual const ToggleCollection toggle_collection() = 0;
 	};
 
 	typedef std::vector<std::unique_ptr<PackSource>> SourceCollection;

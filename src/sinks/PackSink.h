@@ -19,6 +19,7 @@ namespace packer
 		virtual void Insert(KeyValueCollection key_value) = 0;
 		virtual void Insert(FileCollection file_collection) = 0;
 		virtual void Insert(TranslationCollection translation_collection) = 0;
+		virtual void Insert(ToggleCollection toggle_collection) = 0;
 	};
 
 	typedef std::vector<std::unique_ptr<PackSink>> SinkCollection;

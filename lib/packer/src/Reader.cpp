@@ -1,17 +1,21 @@
-#include <packer/unpacker.h>
+#include <packer/reader.h>
 
 #include <get_key.sql.hpp>
 #include <iostream>
 
-packer::Unpacker::Unpacker(std::string file_name)
+#include "SQLiteCpp/Database.h"
+#include "SQLiteCpp/Statement.h"
+#include "SQLiteCpp/Transaction.h"
+
+packer::Reader::Reader(std::string file_name)
 {
 	this->database_ = std::make_unique<SQLite::Database>(file_name, SQLite::OPEN_READWRITE );
 }
 
 
-std::string packer::Unpacker::get_key_value(std::string key)
+std::string packer::Reader::get_key_value(const std::string& key)
 {
-	auto get_key_sql_text = LOAD_RESOURCE(sql_get_key_sql);
+	const auto get_key_sql_text = LOAD_RESOURCE(sql_get_key_sql);
 	try
 	{
 		SQLite::Statement get_key_stmt(*this->database_, get_key_sql_text.data());

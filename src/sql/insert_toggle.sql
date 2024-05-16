@@ -1,0 +1,1 @@
+INSERT INTO Toggle VALUES ($Name, $IsOn);
