@@ -9,9 +9,7 @@ set(EMBEDED_FILES
 add_custom_target(packer_library_resources SOURCES ${EMBEDED_FILES})
 embed_resources(PACKER_LIBRARY_RESOURCES_HPP CONTENT_AS_COMMENT FILES ${EMBEDED_FILES} )
 
-
-add_library(${LIBRARY_NAME} 
-
+add_library(${LIBRARY_NAME}
     src/Reader.cpp    
     include/packer/Reader.h
     ${PACKER_LIBRARY_RESOURCES_HPP}

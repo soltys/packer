@@ -3,8 +3,8 @@ include(FetchContent)
 #### START TOOLS
 FetchContent_Declare(
   embed_resource
-  GIT_REPOSITORY https://github.com/soltys/embed-resource.git
-  GIT_TAG        0.2.0
+  GIT_REPOSITORY https://github.com/soltys/embed_resource.git
+  GIT_TAG        0.2.1
 )
 FetchContent_MakeAvailable(embed_resource)
 set_target_properties(embed_resource PROPERTIES FOLDER "Dependencies")
