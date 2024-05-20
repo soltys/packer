@@ -4,17 +4,20 @@ set(LIBRARY_NAME
 
 
 set(EMBEDED_FILES 
+    "sql/insert_log.sql"
     "sql/get_key.sql"
     "sql/get_file.sql"
     "sql/get_toggle.sql"
     "sql/get_translation.sql"
+    "sql/get_latest_logs.sql"
 )
 add_custom_target(packer_library_resources SOURCES ${EMBEDED_FILES})
 embed_resources(PACKER_LIBRARY_RESOURCES_HPP CONTENT_AS_COMMENT FILES ${EMBEDED_FILES} )
 
 add_library(${LIBRARY_NAME}
-    src/Reader.cpp    
-    include/packer/Reader.h
+    src/Packer.cpp    
+    include/packer/Packer.h
+    include/packer/LogEntry.hpp
     ${PACKER_LIBRARY_RESOURCES_HPP}
 )
 

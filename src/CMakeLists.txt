@@ -3,6 +3,7 @@ set(EMBEDED_FILES
     "sql/create_store_table.sql"
     "sql/create_translation_table.sql"
     "sql/create_toggle_table.sql"
+    "sql/create_log_table.sql"
     "sql/insert_key_value.sql"
     "sql/insert_file.sql"
     "sql/insert_translation.sql"

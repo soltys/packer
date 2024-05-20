@@ -4,6 +4,7 @@
 #include <sql/create_store_table.sql.hpp>
 #include <sql/create_translation_table.sql.hpp>
 #include <sql/create_toggle_table.sql.hpp>
+#include <sql/create_log_table.sql.hpp>
 
 #include <sql/insert_key_value.sql.hpp>
 #include <sql/insert_file.sql.hpp>
@@ -39,6 +40,7 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 	ExecuteStatement(LOAD_RESOURCE(sql_create_store_table_sql));
 	ExecuteStatement(LOAD_RESOURCE(sql_create_translation_table_sql));
 	ExecuteStatement(LOAD_RESOURCE(sql_create_toggle_table_sql));
+	ExecuteStatement(LOAD_RESOURCE(sql_create_log_table_sql));
 }
 
 void packer::SqlitePackSink::ExecuteStatement(const EmbedResource &stmt_text_resource) const
