@@ -13,6 +13,11 @@
 packer::Reader::Reader(std::string file_name)
 {
 	this->database_ = std::make_unique<SQLite::Database>(file_name, SQLite::OPEN_READWRITE);
+
+	ExecuteStatement("pragma journal_mode = WAL;");
+	ExecuteStatement("pragma synchronous = normal;");
+	ExecuteStatement("pragma temp_store = memory;");
+	ExecuteStatement("pragma mmap_size = 30000000000;");
 }
 
 std::string packer::Reader::get_key_value(const std::string &key) const
@@ -89,5 +94,18 @@ std::string packer::Reader::get_translation(const std::string &key, const std::s
 	{
 		std::cerr << "exception: " << e.what() << std::endl;
 		return "";
+	}
+}
+
+void packer::Reader::ExecuteStatement(const char *stmt_text) const
+{
+	try
+	{
+		SQLite::Statement statement(*this->database_, stmt_text);
+		statement.executeStep();
+	}
+	catch (SQLite::Exception &e)
+	{
+		std::cerr << "exception: " << e.what() << std::endl;
 	}
 }

@@ -17,17 +17,17 @@
             "path": "file3.txt"
         }
     ],
-    "store": {
+    "kv": {
         "key1": "value1",
         "key2": "value2",
         "key3": "value3"
     },
-    "toggles": {
+    "options": {
         "feature1": true,
         "feature2": false,
         "feature3": true
     },
-    "translations": {
+    "strings": {
         "HELLO_MESSAGE": {
             "en": "Hello, World!",
             "pl": "Witaj, Świecie!"

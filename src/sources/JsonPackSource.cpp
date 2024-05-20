@@ -4,6 +4,10 @@
 #include "../utils/Utils.h"
 #include "../utils/glob.hpp"
 
+#define PACKER_JSON_SOURCE_KV "kv"
+#define PACKER_JSON_SOURCE_STRINGS "strings"
+#define PACKER_JSON_SOURCE_OPTIONS "options"
+
 void packer::JsonPackSource::Initialize(PackerArgument packer_argument)
 {
 	auto file_content = read_file_into_string(packer_argument.input_file());
@@ -12,7 +16,7 @@ void packer::JsonPackSource::Initialize(PackerArgument packer_argument)
 
 bool packer::JsonPackSource::Validate()
 {
-	if (!root.contains("files") && !root.contains("store"))
+	if (!root.contains("files") && !root.contains(PACKER_JSON_SOURCE_KV))
 	{
 		return false;
 	}
@@ -23,12 +27,12 @@ const packer::KeyValueCollection packer::JsonPackSource::key_value_collection()
 {
 	packer::KeyValueCollection collection;
 
-	if (!root.contains("store"))
+	if (!root.contains(PACKER_JSON_SOURCE_KV))
 	{
 		return collection;
 	}
 
-	const auto &store = root["store"];
+	const auto &store = root[PACKER_JSON_SOURCE_KV];
 	if (!store.is_object())
 	{
 		return collection;
@@ -92,12 +96,12 @@ const packer::TranslationCollection packer::JsonPackSource::translation_collecti
 {
 	packer::TranslationCollection collection;
 
-	if (!root.contains("translations"))
+	if (!root.contains(PACKER_JSON_SOURCE_STRINGS))
 	{
 		return collection;
 	}
 
-	const auto &translations_object = root["translations"];
+	const auto &translations_object = root[PACKER_JSON_SOURCE_STRINGS];
 	if (!translations_object.is_object())
 	{
 		return collection;
@@ -122,12 +126,12 @@ const packer::ToggleCollection packer::JsonPackSource::toggle_collection()
 {
 	packer::ToggleCollection collection;
 
-	if (!root.contains("toggles"))
+	if (!root.contains(PACKER_JSON_SOURCE_OPTIONS))
 	{
 		return collection;
 	}
 
-	const auto &toggles_object = root["toggles"];
+	const auto &toggles_object = root[PACKER_JSON_SOURCE_OPTIONS];
 	if (!toggles_object.is_object())
 	{
 		return collection;

@@ -24,7 +24,13 @@ add_subdirectory(lib)
 add_subdirectory(src)
 
 include(pack_resources)
-add_subdirectory(examples)
+
+option(PACKER_BUILD_EXAMPLES "packer build examples." OFF)
+if (PACKER_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+else (PACKER_BUILD_EXAMPLES)
+    message(STATUS "SQLITECPP_BUILD_EXAMPLES OFF")
+endif (PACKER_BUILD_EXAMPLES)
 
 include(get_all_targets)
 get_all_targets(all_targets)

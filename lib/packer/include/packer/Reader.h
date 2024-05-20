@@ -9,6 +9,7 @@ namespace packer
 	class Reader
 	{
 		std::unique_ptr<SQLite::Database> database_;
+		void ExecuteStatement(const char* stmt_text) const;
 	public:
 		Reader(std::string file_name);
 		std::vector<char> get_file(const std::string& name) const;

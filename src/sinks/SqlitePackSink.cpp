@@ -29,6 +29,12 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 
 	this->db_ = std::make_unique<SQLite::Database>(output_file, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
 
+	ExecuteStatement("pragma page_size = 32768;");
+	ExecuteStatement("pragma journal_mode = WAL;");
+	ExecuteStatement("pragma synchronous = normal;");
+	ExecuteStatement("pragma temp_store = memory;");
+	ExecuteStatement("pragma mmap_size = 30000000000;");
+
 	ExecuteStatement(LOAD_RESOURCE(sql_create_file_table_sql));
 	ExecuteStatement(LOAD_RESOURCE(sql_create_store_table_sql));
 	ExecuteStatement(LOAD_RESOURCE(sql_create_translation_table_sql));
@@ -37,10 +43,15 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 
 void packer::SqlitePackSink::ExecuteStatement(const EmbedResource &stmt_text_resource) const
 {
+	ExecuteStatement(stmt_text_resource.data());
+}
+
+void packer::SqlitePackSink::ExecuteStatement(const char *stmt_text) const
+{
 	try
 	{
-		SQLite::Statement statement(*this->db_, stmt_text_resource.data());
-		statement.exec();
+		SQLite::Statement statement(*this->db_, stmt_text);
+		statement.executeStep();
 	}
 	catch (SQLite::Exception &e)
 	{
@@ -136,6 +147,20 @@ void packer::SqlitePackSink::Insert(ToggleCollection toggle_collection)
 		}
 
 		transaction.commit();
+	}
+	catch (SQLite::Exception &e)
+	{
+		std::cout << "exception: " << e.what() << std::endl;
+		return;
+	}
+}
+
+void packer::SqlitePackSink::Finalize()
+{
+	try
+	{
+		ExecuteStatement("pragma vacuum;");
+		ExecuteStatement("pragma optimize;");
 	}
 	catch (SQLite::Exception &e)
 	{

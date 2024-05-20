@@ -11,6 +11,7 @@ namespace packer
 	private:
 		std::unique_ptr<SQLite::Database> db_;
 		void ExecuteStatement(const EmbedResource &stmt_text_resource) const;
+		void ExecuteStatement(const char* stmt_text) const;
 
 	public:
 		void Initialize(packer::PackerArgument packer_argument) override;
@@ -18,5 +19,6 @@ namespace packer
 		void Insert(FileCollection file_collection) override;
 		void Insert(TranslationCollection translation_collection) override;
 		void Insert(ToggleCollection toggle_collection) override;
+		void Finalize() override;
 	};
 }
