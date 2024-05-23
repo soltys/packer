@@ -114,10 +114,10 @@ void packer::Packer::ExecuteStatement(const char *stmt_text) const
 	}
 }
 
-static int64_t get_timestamp_milliseconds()
+static int64_t get_timestamp_microseconds()
 {
 	using namespace std::chrono;
-	return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	return duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void packer::Packer::insert_log(const std::string &level, const std::string &logger, const std::string &message) const
@@ -127,7 +127,7 @@ void packer::Packer::insert_log(const std::string &level, const std::string &log
 	{
 		SQLite::Statement insert_log_stmt(*this->database_, insert_log_sql_text.data());
 		insert_log_stmt.bind("$Level", level);
-		insert_log_stmt.bind("$Date", (int64_t)get_timestamp_milliseconds());
+		insert_log_stmt.bind("$Date", (int64_t)get_timestamp_microseconds());
 		insert_log_stmt.bind("$Logger", logger);
 		insert_log_stmt.bind("$Message", message);
 		insert_log_stmt.executeStep();
