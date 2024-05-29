@@ -41,9 +41,16 @@ const packer::KeyValueCollection packer::JsonPackSource::key_value_collection()
 	for (const auto &el : store.items())
 	{
 		auto key = el.key();
-		auto value = el.value().get<std::string>();
-
-		collection.emplace_back(key, value);
+		if (el.value().is_string())
+		{
+			auto value = el.value().get<std::string>();
+			collection.emplace_back(key, value);
+		}
+		else
+		{
+			auto value = el.value().dump();
+			collection.emplace_back(key, value);
+		}
 	}
 
 	return collection;

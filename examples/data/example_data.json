@@ -18,9 +18,14 @@
         }
     ],
     "kv": {
+        "number1": 1,
+        "float1": 1.234,
         "key1": "value1",
         "key2": "value2",
-        "key3": "value3"
+        "key3": "value3",
+        "jsonKey": {
+            "nestedObject": "nestedValue"
+        }
     },
     "options": {
         "feature1": true,

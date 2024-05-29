@@ -7,6 +7,7 @@ int main()
 
     // key value store
     std::cout << "value returned for key1 is " << pack.get_key_value("key1") << std::endl;
+    std::cout << "value returned for jsonKey is " << pack.get_key_value("jsonKey") << std::endl;
 
     // getting file
     const auto file = pack.get_file("f1");
