@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS "Store" (
-	"Key" TEXT NOT NULL,
-	"Value" BLOB NOT NULL,
-	PRIMARY KEY("Key")
-);

@@ -1,11 +1,4 @@
-#include <packer/Packer.h>
-
-#include <get_key.sql.hpp>
-#include <get_file.sql.hpp>
-#include <get_toggle.sql.hpp>
-#include <get_translation.sql.hpp>
-#include <insert_log.sql.hpp>
-#include <get_latest_logs.sql.hpp>
+#include <packer/Packer.hpp>
 
 #include <iostream>
 
@@ -26,92 +19,50 @@ packer::Packer::Packer(std::string file_name)
 
 std::string packer::Packer::get_key_value(const std::string &key) const
 {
-	const auto get_key_sql_text = LOAD_RESOURCE(sql_get_key_sql);
-	try
-	{
-		SQLite::Statement get_key_stmt(*this->database_, get_key_sql_text.data());
-		get_key_stmt.bind("$Key", key);
-		get_key_stmt.executeStep();
-		return std::string(get_key_stmt.getColumn(0).getText());
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-		return "";
-	}
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT Value from Store WHERE Key=$Key;)sql");
+	stmt.bind("$Key", key);
+	stmt.executeStep();
+	return std::string(stmt.getColumn(0).getText());
 }
 
 std::vector<char> packer::Packer::get_file(const std::string &name) const
 {
 	std::vector<char> blob;
-	const auto get_file_sql_text = LOAD_RESOURCE(sql_get_file_sql);
-	try
-	{
-		SQLite::Statement get_file_stmt(*this->database_, get_file_sql_text.data());
-		get_file_stmt.bind("$Name", name);
-		get_file_stmt.executeStep();
 
-		const auto size = get_file_stmt.getColumn("Size").getInt();
-		blob.reserve(size);
-		const auto content_column = get_file_stmt.getColumn("Content");
-		auto blob_begin = (const char *)content_column.getBlob();
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT Content, Size FROM File WHERE Name = $Name;)sql");
+	stmt.bind("$Name", name);
+	stmt.executeStep();
 
-		std::copy(blob_begin, blob_begin + size, std::back_inserter(blob));
+	const auto size = stmt.getColumn("Size").getInt();
+	blob.reserve(size);
+	const auto content_column = stmt.getColumn("Content");
+	auto blob_begin = (const char *)content_column.getBlob();
 
-		return blob;
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-		return blob;
-	}
+	std::copy(blob_begin, blob_begin + size, std::back_inserter(blob));
+
+	return blob;
 }
 
-bool packer::Packer::get_toggle(const std::string &name) const
+bool packer::Packer::is_on(const std::string &name) const
 {
-	const auto get_toggle_sql_text = LOAD_RESOURCE(sql_get_toggle_sql);
-	try
-	{
-		SQLite::Statement get_toggle_stmt(*this->database_, get_toggle_sql_text.data());
-		get_toggle_stmt.bind("$Name", name);
-		get_toggle_stmt.executeStep();
-		return get_toggle_stmt.getColumn(0).getInt() != 0;
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-		return false;
-	}
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT IsOn FROM Toggle WHERE Name=$Name;)sql");
+	stmt.bind("$Name", name);
+	stmt.executeStep();
+	return stmt.getColumn(0).getInt() != 0;
 }
 std::string packer::Packer::get_translation(const std::string &key, const std::string &locale) const
 {
-	const auto get_translation_sql_text = LOAD_RESOURCE(sql_get_translation_sql);
-	try
-	{
-		SQLite::Statement get_translation_stmt(*this->database_, get_translation_sql_text.data());
-		get_translation_stmt.bind("$Key", key);
-		get_translation_stmt.bind("$Locale", locale);
-		get_translation_stmt.executeStep();
-		return std::string(get_translation_stmt.getColumn(0).getText());
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-		return "";
-	}
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT Value FROM translation WHERE Key=$Key AND Locale=$Locale;)sql");
+	stmt.bind("$Key", key);
+	stmt.bind("$Locale", locale);
+	stmt.executeStep();
+	return std::string(stmt.getColumn(0).getText());
 }
 
 void packer::Packer::ExecuteStatement(const char *stmt_text) const
 {
-	try
-	{
-		SQLite::Statement statement(*this->database_, stmt_text);
-		statement.executeStep();
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-	}
+	SQLite::Statement statement(*this->database_, stmt_text);
+	statement.executeStep();
 }
 
 static int64_t get_timestamp_microseconds()
@@ -122,46 +73,42 @@ static int64_t get_timestamp_microseconds()
 
 void packer::Packer::insert_log(const std::string &level, const std::string &logger, const std::string &message) const
 {
-	const auto insert_log_sql_text = LOAD_RESOURCE(sql_insert_log_sql);
-	try
-	{
-		SQLite::Statement insert_log_stmt(*this->database_, insert_log_sql_text.data());
-		insert_log_stmt.bind("$Level", level);
-		insert_log_stmt.bind("$Date", (int64_t)get_timestamp_microseconds());
-		insert_log_stmt.bind("$Logger", logger);
-		insert_log_stmt.bind("$Message", message);
-		insert_log_stmt.executeStep();
-	}
-	catch (SQLite::Exception &e)
-	{
-		std::cerr << "exception: " << e.what() << std::endl;
-	}
+	SQLite::Statement stmt(*this->database_, R"sql(INSERT INTO Log (Level, Date, Logger, Message) VALUES ($Level, $Date, $Logger, $Message);)sql");
+	stmt.bind("$Level", level);
+	stmt.bind("$Date", (int64_t)get_timestamp_microseconds());
+	stmt.bind("$Logger", logger);
+	stmt.bind("$Message", message);
+	stmt.executeStep();
 }
 
 std::vector<packer::LogEntry> packer::Packer::get_latest_logs(const int &limit) const
 {
 	std::vector<packer::LogEntry> collection;
-	const auto get_latest_logs_sql_text = LOAD_RESOURCE(sql_get_latest_logs_sql);
-	try
-	{
-		SQLite::Statement get_latest_logs_stmt(*this->database_, get_latest_logs_sql_text.data());
-		get_latest_logs_stmt.bind("$Limit", limit);
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT Level, Date, Logger, Message FROM Log ORDER BY Date DESC, Id ASC LIMIT $Limit;)sql");
+	stmt.bind("$Limit", limit);
 
-		while (get_latest_logs_stmt.executeStep())
-		{
-			collection.emplace_back(packer::LogEntry(
-				get_latest_logs_stmt.getColumn(0).getText(),
-				get_latest_logs_stmt.getColumn(1).getInt64(),
-				get_latest_logs_stmt.getColumn(2).getText(),
-				get_latest_logs_stmt.getColumn(3).getText()
-			));
-		}
-
-		return collection;
-	}
-	catch (SQLite::Exception &e)
+	while (stmt.executeStep())
 	{
-		std::cerr << "exception: " << e.what() << std::endl;
-		return std::vector<packer::LogEntry>();
+		collection.emplace_back(packer::LogEntry(
+			stmt.getColumn(0).getText(),
+			stmt.getColumn(1).getInt64(),
+			stmt.getColumn(2).getText(),
+			stmt.getColumn(3).getText()));
 	}
+
+	return collection;
+}
+
+std::vector<packer::Toggle> packer::Packer::get_toggles() const
+{
+	std::vector<packer::Toggle> collection;
+	SQLite::Statement stmt(*this->database_, R"sql(SELECT Name, IsOn FROM Toggle;)sql");
+
+	while (stmt.executeStep())
+	{
+		collection.emplace_back(packer::Toggle(
+			stmt.getColumn(0).getText(),
+			stmt.getColumn(1).getInt() == 1));
+	}
+	return collection;
 }

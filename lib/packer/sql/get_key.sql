@@ -1,1 +1,0 @@
-SELECT Value from Store WHERE Key=$Key;

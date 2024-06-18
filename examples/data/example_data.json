@@ -25,6 +25,16 @@
         "key3": "value3",
         "jsonKey": {
             "nestedObject": "nestedValue"
+        },
+        "keymapping": {
+            "LEFT": {
+                "UP": "W",
+                "DOWN": "S"
+            },
+            "RIGHT": {
+                "UP": "UP",
+                "DOWN": "DOWN"
+            }
         }
     },
     "options": {

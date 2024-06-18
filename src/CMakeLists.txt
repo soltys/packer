@@ -1,17 +1,3 @@
-set(EMBEDED_FILES 
-    "sql/create_file_table.sql"
-    "sql/create_store_table.sql"
-    "sql/create_translation_table.sql"
-    "sql/create_toggle_table.sql"
-    "sql/create_log_table.sql"
-    "sql/insert_key_value.sql"
-    "sql/insert_file.sql"
-    "sql/insert_translation.sql"
-    "sql/insert_toggle.sql"
-)
-add_custom_target(packer_resources SOURCES ${EMBEDED_FILES})
-source_group("Embeded Files" REGULAR_EXPRESSION ".*sql.hpp$")
-embed_resources(LIBRARY_RESOURCES_HPP CONTENT_AS_COMMENT FILES ${EMBEDED_FILES} )
 
 add_executable(packer 
     main.cpp    
@@ -38,8 +24,6 @@ add_executable(packer
     utils/Utils.h    
     utils/glob.hpp 
     utils/args.hxx
-    
-    ${LIBRARY_RESOURCES_HPP}
     )
 target_link_libraries(packer SQLiteCpp sqlite3)
 target_include_directories(packer PRIVATE "${PROJECT_BINARY_DIR}/include" ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)

@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS "File" (
-	"Name" TEXT NOT NULL,
-	"Content" BLOB NOT NULL,
-	"Size" INTEGER NOT NULL,
-	PRIMARY KEY("Name")
-);

@@ -1,5 +1,5 @@
 #include "PackerArgument.h"
-#include <packer/private/config.h>
+#include <packer/private/config.hpp>
 using namespace packer;
 
 ParseResult PackerArgument::Parse(int argc, char** argv)

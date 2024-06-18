@@ -1,5 +1,5 @@
 #include <iostream>
-#include <packer/Packer.h>
+#include <packer/Packer.hpp>
 int main()
 {
     std::cout << "CWD: " << std::filesystem::current_path() << std::endl;
@@ -23,9 +23,20 @@ int main()
     std::cout << "Translation (pl): " << translation << std::endl;
 
     // getting toggle
-    const auto toggle1 = pack.get_toggle("feature1");
-    const auto toggle2 = pack.get_toggle("feature2");
+    const auto toggle1 = pack.is_on("feature1");
+    const auto toggle2 = pack.is_on("feature2");
     std::cout << "feature1: " << toggle1 << "   feature2: " << toggle2 << std::endl;
+
+    auto toggles = pack.get_toggles();
+    if (toggles.size() != 3)
+    {
+        return EXIT_FAILURE;
+    }
+    
+    for (auto &t : pack.get_toggles())
+    {
+        std::cout << "name: " << t.name() << " status: " << t.is_on() << std::endl;
+    }
 
     std::cout << "Inserting  log into packer" << std::endl;
     pack.insert_log("INFO", "packer_in_use", "{\"message\":\"Log1\"}");
@@ -35,9 +46,9 @@ int main()
     std::cout << "getting logs from pack" << std::endl;
     for (const auto l : pack.get_latest_logs(3))
     {
-        std::cout << "Level: " << l.level() 
-                  << "\tDate: " << l.date() 
-                  << "\tLogger: " << l.logger() 
+        std::cout << "Level: " << l.level()
+                  << "\tDate: " << l.date()
+                  << "\tLogger: " << l.logger()
                   << "\tMessage: " << l.message() << std::endl;
     }
 }

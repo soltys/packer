@@ -1,16 +1,5 @@
 #include "SqlitePackSink.h"
 
-#include <sql/create_file_table.sql.hpp>
-#include <sql/create_store_table.sql.hpp>
-#include <sql/create_translation_table.sql.hpp>
-#include <sql/create_toggle_table.sql.hpp>
-#include <sql/create_log_table.sql.hpp>
-
-#include <sql/insert_key_value.sql.hpp>
-#include <sql/insert_file.sql.hpp>
-#include <sql/insert_translation.sql.hpp>
-#include <sql/insert_toggle.sql.hpp>
-
 #include "../utils/Utils.h"
 
 #include "SQLiteCpp/Database.h"
@@ -36,16 +25,50 @@ void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argu
 	ExecuteStatement("pragma temp_store = memory;");
 	ExecuteStatement("pragma mmap_size = 30000000000;");
 
-	ExecuteStatement(LOAD_RESOURCE(sql_create_file_table_sql));
-	ExecuteStatement(LOAD_RESOURCE(sql_create_store_table_sql));
-	ExecuteStatement(LOAD_RESOURCE(sql_create_translation_table_sql));
-	ExecuteStatement(LOAD_RESOURCE(sql_create_toggle_table_sql));
-	ExecuteStatement(LOAD_RESOURCE(sql_create_log_table_sql));
-}
+	ExecuteStatement(R"sql(
+	CREATE TABLE IF NOT EXISTS "File" (
+		"Name" TEXT NOT NULL,
+		"Content" BLOB NOT NULL,
+		"Size" INTEGER NOT NULL,
+		PRIMARY KEY("Name")
+	);
+	)sql");
 
-void packer::SqlitePackSink::ExecuteStatement(const EmbedResource &stmt_text_resource) const
-{
-	ExecuteStatement(stmt_text_resource.data());
+	ExecuteStatement(R"sql(
+	CREATE TABLE IF NOT EXISTS "Store" (
+		"Key" TEXT NOT NULL,
+		"Value" BLOB NOT NULL,
+		PRIMARY KEY("Key")
+	);
+	)sql");
+
+	ExecuteStatement(R"sql(
+	CREATE TABLE IF NOT EXISTS "Translation" (
+		"Key" TEXT NOT NULL,
+		"Value" TEXT NOT NULL,
+		"Locale" TExt NOT NULL,
+		PRIMARY KEY("Key", "Locale")
+	);
+	)sql");
+
+	ExecuteStatement(R"sql(
+	CREATE TABLE IF NOT EXISTS "Toggle" (
+		"Name" TEXT NOT NULL,
+		"IsOn" BOOLEAN NOT NULL,
+		PRIMARY KEY("Name")
+	);
+	)sql");
+
+	ExecuteStatement(R"sql(
+	CREATE TABLE IF NOT EXISTS "Log" (
+		"Id"	INTEGER NOT NULL,
+		"Level"	TEXT NOT NULL,
+		"Date"	INTEGER NOT NULL,
+		"Logger"	TEXT,
+		"Message"	TEXT,
+		PRIMARY KEY("Id" AUTOINCREMENT)
+	);
+	)sql");
 }
 
 void packer::SqlitePackSink::ExecuteStatement(const char *stmt_text) const
@@ -63,13 +86,12 @@ void packer::SqlitePackSink::ExecuteStatement(const char *stmt_text) const
 
 void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collection)
 {
-	const auto insert_stmt_text = LOAD_RESOURCE(sql_insert_key_value_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
 		for (const auto &key_value : key_value_collection)
 		{
-			SQLite::Statement insert_stmt(*this->db_, insert_stmt_text.data());
+			SQLite::Statement insert_stmt(*this->db_, R"sql(INSERT INTO Store VALUES ($Key, $Value);)sql");
 			insert_stmt.bind("$Key", key_value.key());
 			insert_stmt.bind("$Value", key_value.value());
 			insert_stmt.exec();
@@ -86,7 +108,6 @@ void packer::SqlitePackSink::Insert(const KeyValueCollection key_value_collectio
 
 void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 {
-	const auto insert_file_stmt_text = LOAD_RESOURCE(sql_insert_file_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
@@ -94,7 +115,7 @@ void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 		{
 			auto file_content = read_file_into_string(file.file_path());
 
-			SQLite::Statement insert_stmt(*this->db_, insert_file_stmt_text.data());
+			SQLite::Statement insert_stmt(*this->db_, R"sql(INSERT INTO File VALUES ($Name, $Content, $Size);)sql");
 			insert_stmt.bind("$Name", file.name());
 			insert_stmt.bindNoCopy("$Content", file_content.c_str(), static_cast<int>(file_content.length()));
 			insert_stmt.bind("$Size", static_cast<int64_t>(file_content.length()));
@@ -112,13 +133,12 @@ void packer::SqlitePackSink::Insert(const FileCollection file_collection)
 
 void packer::SqlitePackSink::Insert(TranslationCollection translation_collection)
 {
-	const auto insert_translation_stmt_text = LOAD_RESOURCE(sql_insert_translation_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
 		for (const auto &translation : translation_collection)
 		{
-			SQLite::Statement insert_stmt(*this->db_, insert_translation_stmt_text.data());
+			SQLite::Statement insert_stmt(*this->db_, R"sql(INSERT INTO Translation VALUES ($Key, $Value, $Locale);)sql");
 			insert_stmt.bind("$Key", translation.key());
 			insert_stmt.bind("$Value", translation.value());
 			insert_stmt.bind("$Locale", translation.locale());
@@ -136,13 +156,12 @@ void packer::SqlitePackSink::Insert(TranslationCollection translation_collection
 
 void packer::SqlitePackSink::Insert(ToggleCollection toggle_collection)
 {
-	const auto insert_toggle_stmt_text = LOAD_RESOURCE(sql_insert_toggle_sql);
 	try
 	{
 		SQLite::Transaction transaction(*this->db_);
 		for (const auto &translation : toggle_collection)
 		{
-			SQLite::Statement insert_stmt(*this->db_, insert_toggle_stmt_text.data());
+			SQLite::Statement insert_stmt(*this->db_, R"sql(INSERT INTO Toggle VALUES ($Name, $IsOn);)sql");
 			insert_stmt.bind("$Name", translation.name());
 			insert_stmt.bind("$IsOn", translation.isOn());
 			insert_stmt.exec();

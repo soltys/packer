@@ -1,1 +1,0 @@
-SELECT IsOn FROM Toggle WHERE Name=$Name;

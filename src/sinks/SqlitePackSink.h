@@ -1,5 +1,4 @@
 #pragma once
-#include "EmbedResource.hpp"
 #include "PackSink.h"
 #include "../sources/PackSource.h"
 #include <SQLiteCpp/Database.h>
@@ -10,7 +9,6 @@ namespace packer
 	{
 	private:
 		std::unique_ptr<SQLite::Database> db_;
-		void ExecuteStatement(const EmbedResource &stmt_text_resource) const;
 		void ExecuteStatement(const char* stmt_text) const;
 
 	public:

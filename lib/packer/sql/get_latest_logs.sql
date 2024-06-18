@@ -1,1 +1,0 @@
-SELECT Level, Date, Logger, Message FROM Log ORDER BY Date DESC, Id ASC LIMIT $Limit;
