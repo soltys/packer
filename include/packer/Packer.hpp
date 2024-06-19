@@ -1,6 +1,6 @@
 #pragma once
-#include "sinks/PackSink.h"
-#include "sources/PackSource.h"
+#include <packer/sinks/PackSink.hpp>
+#include <packer/sources/PackSource.hpp>
 
 namespace packer
 {
@@ -15,5 +15,4 @@ namespace packer
 			sources(pack_sources), sinks(pack_sinks) {  }
 		void Pack() const;
 	};
-
 }

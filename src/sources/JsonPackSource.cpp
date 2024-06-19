@@ -1,8 +1,8 @@
-#include "JsonPackSource.h"
+#include <packer/sources/JsonPackSource.hpp>
 
-#include "../utils/json.hpp"
-#include "../utils/Utils.h"
-#include "../utils/glob.hpp"
+#include <nlohmann/json.hpp>
+#include <packer/Utils.hpp>
+#include <glob/glob.hpp>
 
 #define PACKER_JSON_SOURCE_KV "kv"
 #define PACKER_JSON_SOURCE_STRINGS "strings"

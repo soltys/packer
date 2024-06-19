@@ -2,31 +2,33 @@
 add_executable(packer 
     main.cpp    
     Packer.cpp
-    Packer.h
-    PackerArgument.h
+    ${PROJECT_INCLUDE_DIR}/packer/Packer.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/PackerArgument.hpp
     PackerArgument.cpp
 
-    sources/PackSource.h
-    sources/JsonPackSource.h
+    ${PROJECT_INCLUDE_DIR}/packer/sources/PackSource.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/sources/JsonPackSource.hpp
     sources/JsonPackSource.cpp
 
-    sinks/PackSink.h
-    sinks/SqlitePackSink.h
+    ${PROJECT_INCLUDE_DIR}/packer/sinks/PackSink.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/sinks/SqlitePackSink.hpp
     sinks/SqlitePackSink.cpp   
     
-    packTypes/PackTypes.h
-    packTypes/KeyValuePackType.hpp
-    packTypes/FilePackType.hpp
-    packTypes/TranslationPackType.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/pack_types/PackTypes.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/pack_types/KeyValuePackType.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/pack_types/FilePackType.hpp
+    ${PROJECT_INCLUDE_DIR}/packer/pack_types/TranslationPackType.hpp
+    
+    ${PROJECT_INCLUDE_DIR}/packer/Utils.hpp
+    Utils.cpp
 
-    utils/json.hpp 
-    utils/Utils.cpp
-    utils/Utils.h    
-    utils/glob.hpp 
-    utils/args.hxx
+    # include single header files
+    ${PROJECT_INCLUDE_DIR}/nlohmann/json.hpp 
+    ${PROJECT_INCLUDE_DIR}/glob/glob.hpp 
+    ${PROJECT_INCLUDE_DIR}/args/args.hxx
     )
 target_link_libraries(packer SQLiteCpp sqlite3)
-target_include_directories(packer PRIVATE "${PROJECT_BINARY_DIR}/include" ${PROJECT_BINARY_DIR} SQLiteCpp sqlite3)
+target_include_directories(packer PRIVATE "${PROJECT_BINARY_DIR}/include" ${PROJECT_INCLUDE_DIR} SQLiteCpp sqlite3)
 set_target_properties(packer PROPERTIES
     PROJECT_LABEL "Packer Application"                        
     OUTPUT_NAME "packer"

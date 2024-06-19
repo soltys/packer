@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Packer.h"
-#include "PackerArgument.h"
-#include "sources/JsonPackSource.h"
-#include "sinks/SqlitePackSink.h"
+#include <packer/Packer.hpp>
+#include <packer/PackerArgument.hpp>
+#include <packer/sources/JsonPackSource.hpp>
+#include <packer/sinks/SqlitePackSink.hpp>
 
 packer::SourceCollection get_sources()
 {

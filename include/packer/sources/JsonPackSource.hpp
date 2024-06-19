@@ -1,6 +1,6 @@
 #pragma once
-#include "../utils/json.hpp"
-#include "PackSource.h"
+#include <nlohmann/json.hpp>
+#include <packer/sources/PackSource.hpp>
 
 namespace packer
 {

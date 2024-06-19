@@ -1,10 +1,9 @@
-#include "SqlitePackSink.h"
+#include <packer/sinks/SqlitePackSink.hpp>
+#include <packer/Utils.hpp>
 
-#include "../utils/Utils.h"
-
-#include "SQLiteCpp/Database.h"
-#include "SQLiteCpp/Statement.h"
-#include "SQLiteCpp/Transaction.h"
+#include <SQLiteCpp/Database.h>
+#include <SQLiteCpp/Statement.h>
+#include <SQLiteCpp/Transaction.h>
 
 void packer::SqlitePackSink::Initialize(const packer::PackerArgument packer_argument)
 {

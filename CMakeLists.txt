@@ -15,7 +15,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(GetGitRevisionDescription)
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
 configure_file("config.hpp.in" "${PROJECT_BINARY_DIR}/include/packer/private/config.hpp")
-
+set(PROJECT_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
 include(dependecies)
 
 add_subdirectory(lib)

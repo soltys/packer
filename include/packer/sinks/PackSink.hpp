@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../PackerArgument.h"
-#include "../packTypes/PackTypes.h"
+#include <packer/PackerArgument.hpp>
+#include <packer/pack_types/PackTypes.hpp>
 
 namespace packer
 {
