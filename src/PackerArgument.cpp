@@ -1,15 +1,16 @@
 #include <packer/PackerArgument.hpp>
+#include <packer/Utils.hpp>
 #include <packer/private/config.hpp>
 using namespace packer;
 
-ParseResult PackerArgument::Parse(int argc, char** argv)
+ParseResult PackerArgument::Parse(int argc, char **argv)
 {
 	args::ArgumentParser parser(PROJECT_DESCRIPTION);
-	args::HelpFlag help_flag(parser, "help", "Display this help menu", { 'h', "help" });
-	args::Flag version_flag(parser, "version", "shows version and exit", { 'v', "version" });
-	args::ValueFlag<std::string> input_file_flag(parser, "input", "input file to be processed", { 'i',"input" });
-	args::ValueFlag<std::string> output_file_flag(parser, "output", "output file to be processed", { 'o',"output" });
-	args::Flag forceFlag(parser, "force", "overwrite output file if already exists", { 'f',"force" });
+	args::HelpFlag help_flag(parser, "help", "Display this help menu", {'h', "help"});
+	args::Flag version_flag(parser, "version", "shows version and exit", {'v', "version"});
+	args::ValueFlag<std::string> input_file_flag(parser, "input", "input source to be processed", {'i', "input"});
+	args::ValueFlag<std::string> output_file_flag(parser, "output", "output file to be processed", {'o', "output"});
+	args::Flag forceFlag(parser, "force", "overwrite output file if already exists", {'f', "force"});
 
 	try
 	{
@@ -35,18 +36,18 @@ ParseResult PackerArgument::Parse(int argc, char** argv)
 
 	if (version_flag)
 	{
-		std::cout << "packer version " << PROJECT_VERSION << " " << PROJECT_VERSION_SHA1 << std::endl;
+		get_version_string(std::cout);
 		return ExitWithSuccess;
 	}
 
 	if (!input_file_flag)
 	{
-		std::cerr << "input file is empty" << std::endl;
+		std::cerr << "input source is empty" << std::endl;
 		std::cerr << parser;
 		return ExitWithFailure;
 	}
-	input_file_ = args::get(input_file_flag);
-
+	input_ = args::get(input_file_flag);
+	input_type_ = parse_input_source();
 	if (!output_file_flag)
 	{
 		std::cerr << "output file name is empty" << std::endl;
@@ -54,8 +55,21 @@ ParseResult PackerArgument::Parse(int argc, char** argv)
 		return ExitWithFailure;
 	}
 	output_file_ = args::get(output_file_flag);
-	
+
 	force_ = args::get(forceFlag);
 
 	return Continue;
+}
+
+InputType PackerArgument::parse_input_source()
+{
+	if (input_.find("json") != std::string::npos)
+	{
+		return InputType::JSON;
+	}
+	if (input_.find("http") != std::string::npos)
+	{
+		return InputType::HTTP;
+	}
+	return InputType::UNKNOWN;
 }

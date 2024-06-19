@@ -2,22 +2,7 @@
 
 #include <packer/Packer.hpp>
 #include <packer/PackerArgument.hpp>
-#include <packer/sources/JsonPackSource.hpp>
-#include <packer/sinks/SqlitePackSink.hpp>
-
-packer::SourceCollection get_sources()
-{
-	packer::SourceCollection sources;
-	sources.push_back(std::make_unique<packer::JsonPackSource>());
-	return sources;
-}
-
-packer::SinkCollection get_sinks()
-{
-	packer::SinkCollection sinks;
-	sinks.push_back(std::make_unique<packer::SqlitePackSink>());
-	return sinks;
-}
+#include <packer/Factory.hpp>
 
 int main(int argc, char** argv)
 {
@@ -33,7 +18,7 @@ int main(int argc, char** argv)
 		break;
 	}
 
-	const auto sources = get_sources();
+	const auto sources = packer::get_sources(packer_argument);
 	for (const auto& source : sources)
 	{
 		source->Initialize(packer_argument);
@@ -44,7 +29,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	const auto sinks = get_sinks();
+	const auto sinks = packer::get_sinks(packer_argument);
 	for (const auto& sink : sinks)
 	{
 		sink->Initialize(packer_argument);

@@ -10,7 +10,7 @@
 
 void packer::JsonPackSource::Initialize(PackerArgument packer_argument)
 {
-	auto file_content = read_file_into_string(packer_argument.input_file());
+	auto file_content = read_file_into_string(packer_argument.input());
 	this->root = nlohmann::json::parse(file_content);
 }
 
@@ -37,22 +37,7 @@ const packer::KeyValueCollection packer::JsonPackSource::key_value_collection()
 	{
 		return collection;
 	}
-
-	for (const auto &el : store.items())
-	{
-		auto key = el.key();
-		if (el.value().is_string())
-		{
-			auto value = el.value().get<std::string>();
-			collection.emplace_back(key, value);
-		}
-		else
-		{
-			auto value = el.value().dump();
-			collection.emplace_back(key, value);
-		}
-	}
-
+	KeyValuePackType::from_json(store, collection);
 	return collection;
 }
 
@@ -114,25 +99,13 @@ const packer::TranslationCollection packer::JsonPackSource::translation_collecti
 		return collection;
 	}
 
-	for (const auto &group : translations_object.items())
-	{
-		std::string key = group.key();
-
-		for (const auto &el : group.value().items())
-		{
-			const auto locale = el.key();
-			const auto value = el.value().get<std::string>();
-			collection.emplace_back(key, value, locale);
-		}
-	}
-
+	TranslationPackType::from_json(translations_object, collection);
 	return collection;
 }
 
 const packer::ToggleCollection packer::JsonPackSource::toggle_collection()
 {
 	packer::ToggleCollection collection;
-
 	if (!root.contains(PACKER_JSON_SOURCE_OPTIONS))
 	{
 		return collection;
@@ -143,14 +116,6 @@ const packer::ToggleCollection packer::JsonPackSource::toggle_collection()
 	{
 		return collection;
 	}
-
-	for (const auto &entry : toggles_object.items())
-	{
-		std::string name = entry.key();
-
-		auto value = entry.value().get<bool>();
-		collection.emplace_back(name, value);
-	}
-
+	TogglePackType::from_json(toggles_object, collection);
 	return collection;
 }
