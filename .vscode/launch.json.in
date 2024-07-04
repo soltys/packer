@@ -10,11 +10,12 @@
             "request" : "launch",
             "program" : "@CMAKE_BINARY_DIR@/Debug/bin/packer.exe",
             "args" : [
-                "-f",
-                "-i",
-                "@PROJECT_SOURCE_DIR@/examples/data/example_data.json",
+                "-f",                
                 "-o",
-                "@CMAKE_BINARY_DIR@/res.db"
+                "@CMAKE_BINARY_DIR@/res.db",
+                "--",
+                "@PROJECT_SOURCE_DIR@/examples/data/example_data.json",
+                "@PROJECT_SOURCE_DIR@/examples/data/example_data_part2.json"
             ],
             "stopAtEntry" : false,
             "cwd" : "@PROJECT_SOURCE_DIR@/examples/data",

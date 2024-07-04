@@ -1,6 +1,9 @@
 pack_resources(pack_file
-    JSON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../data/example_data.json"
+    JSON_FILES 
+		"${PROJECT_SOURCE_DIR}/examples/data/example_data.json"
+	 	"${PROJECT_SOURCE_DIR}/examples/data/example_data_part2.json" 
 	OUTPUT_FILE "${PROJECT_BINARY_DIR}/my_own_pack.sqlite"
+	WORKING_DIRECTORY "C:/git/personal/packer/examples/data/"
     FORCE)
 
 

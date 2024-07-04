@@ -8,7 +8,7 @@ ParseResult PackerArgument::Parse(int argc, char **argv)
 	args::ArgumentParser parser(PROJECT_DESCRIPTION);
 	args::HelpFlag help_flag(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag version_flag(parser, "version", "shows version and exit", {'v', "version"});
-	args::ValueFlag<std::string> input_file_flag(parser, "input", "input source to be processed", {'i', "input"});
+	args::PositionalList<std::string> input_file_flag(parser, "input", "input source to be processed");
 	args::ValueFlag<std::string> output_file_flag(parser, "output", "output file to be processed", {'o', "output"});
 	args::Flag forceFlag(parser, "force", "overwrite output file if already exists", {'f', "force"});
 
@@ -63,13 +63,16 @@ ParseResult PackerArgument::Parse(int argc, char **argv)
 
 InputType PackerArgument::parse_input_source()
 {
-	if (input_.find("json") != std::string::npos)
+	for (const auto &i : input_)
 	{
-		return InputType::JSON;
-	}
-	if (input_.find("http") != std::string::npos)
-	{
-		return InputType::HTTP;
+		if (i.find("json") != std::string::npos)
+		{
+			return InputType::JSON;
+		}
+		if (i.find("http") != std::string::npos)
+		{
+			return InputType::HTTP;
+		}
 	}
 	return InputType::UNKNOWN;
 }

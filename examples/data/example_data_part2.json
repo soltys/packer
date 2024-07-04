@@ -1,0 +1,7 @@
+{
+    "options": {
+        "feature4": true,
+        "feature5": false,
+        "feature6": true
+    }   
+}

@@ -2,11 +2,12 @@
 #include <nlohmann/json.hpp>
 #include <packer/sources/PackSource.hpp>
 
+#include <vector>
 namespace packer
 {
 	class JsonPackSource : public PackSource
 	{
-		nlohmann::json root;
+		std::vector<nlohmann::json> roots;
 	public:
 		JsonPackSource() = default;
 		void Initialize(PackerArgument packer_argument) override;

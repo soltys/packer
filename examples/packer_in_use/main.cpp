@@ -28,7 +28,7 @@ int main()
     std::cout << "feature1: " << toggle1 << "   feature2: " << toggle2 << std::endl;
 
     auto toggles = pack.get_toggles();
-    if (toggles.size() != 3)
+    if (toggles.size() != 6)
     {
         return EXIT_FAILURE;
     }
