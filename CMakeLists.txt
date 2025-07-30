@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.28...3.29)
+cmake_minimum_required(VERSION 3.30)
 
 project(packer
     DESCRIPTION "application which puts stuff into things"
     HOMEPAGE_URL "https://github.com/soltys/packer"
-    VERSION 0.1.0
+    VERSION 0.1.2
     LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)

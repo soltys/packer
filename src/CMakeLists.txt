@@ -12,8 +12,6 @@ add_executable(packer
     ${PROJECT_INCLUDE_DIR}/packer/sources/PackSource.hpp
     ${PROJECT_INCLUDE_DIR}/packer/sources/JsonPackSource.hpp
     sources/JsonPackSource.cpp
-    ${PROJECT_INCLUDE_DIR}/packer/sources/HttpPackSource.hpp
-    sources/HttpPackSource.cpp
 
     ${PROJECT_INCLUDE_DIR}/packer/sinks/PackSink.hpp
     ${PROJECT_INCLUDE_DIR}/packer/sinks/SqlitePackSink.hpp

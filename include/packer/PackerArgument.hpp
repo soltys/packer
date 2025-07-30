@@ -14,7 +14,6 @@ namespace packer
 	{
 		UNKNOWN = -1,
 		JSON,
-		HTTP
 	};
 
 	class PackerArgument

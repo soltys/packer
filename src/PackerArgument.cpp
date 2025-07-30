@@ -69,10 +69,6 @@ InputType PackerArgument::parse_input_source()
 		{
 			return InputType::JSON;
 		}
-		if (i.find("http") != std::string::npos)
-		{
-			return InputType::HTTP;
-		}
 	}
 	return InputType::UNKNOWN;
 }
